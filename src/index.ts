@@ -1,13 +1,16 @@
-import "dotenv/config"
+import "dotenv/config";
 import express from "express";
+import v1Router from "./routes/v1/index.ts";
 
 const app = express();
-const port = process.env.PORT || 5173
+const port = process.env.PORT || 5173;
 
 app.get("/", (_, response) => {
   response.json({ message: "ok" });
 });
 
+app.use("/v1", v1Router);
+
 app.listen(port, () => {
-    console.log(`Running on port ${port}`)
-})
+  console.log(`Running on port ${port}`);
+});
