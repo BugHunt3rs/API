@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client"
-  output   = "../infrastructure/database/orm/prisma/generated/prisma"
+  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -17,7 +17,7 @@ model cargo_status {
 model chemical {
   id             Int              @id @default(autoincrement())
   name           String           @db.VarChar(255)
-  Description    String           @db.VarChar(255)
+  description    String           @db.VarChar(255)
   UN_number      String           @db.VarChar(4)
   risk_class_id  Int
   status         Boolean
