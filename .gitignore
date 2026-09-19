@@ -1,8 +1,5 @@
 node_modules
+dist
 .env
+
 /generated/prisma
-/infrastructure/database/orm/prisma/generated/prisma/internal
-/infrastructure/database/orm/prisma/generated/prisma/browser.ts
-/infrastructure/database/orm/prisma/generated/prisma/enums.ts
-/infrastructure/database/orm/prisma/generated/prisma/commonInputTypes.ts
-/infrastructure/database/orm/prisma/generated/prisma/client.ts
