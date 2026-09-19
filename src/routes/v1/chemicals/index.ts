@@ -1,6 +1,5 @@
 import express from "express";
-import { prisma } from "../../../../infrastructure/database/orm/prisma/generated/prisma/prismaClient.ts";
-import createChemical from "../../../handlers/chemicals/createChemical.ts";
+import createChemical from "../../../handlers/chemicals/createChemical";
 
 export const chemicalRouter = express.Router();
 
