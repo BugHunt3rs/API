@@ -1,0 +1,22 @@
+{
+  "name": "api",
+  "version": "0.0.1",
+  "description": "Quimi-Port API system",
+  "keywords": [
+    "api"
+  ],
+  "homepage": "https://github.com/BugHunt3rs/API#readme",
+  "bugs": {
+    "url": "https://github.com/BugHunt3rs/API/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BugHunt3rs/API.git"
+  },
+  "author": "BugHunters",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": ""
+  }
+}
