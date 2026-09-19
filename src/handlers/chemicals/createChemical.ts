@@ -1,20 +1,20 @@
-import { Request, Response, NextFunction } from "express";
-import { NewChemical } from "../../domain/entities/chemical_entities";
-import { prisma } from "../../../infrastructure/database/orm/prisma/generated/prisma/prismaClient";
+import type { Request, Response, NextFunction } from "express";
+import type { NewChemical } from "../../domain/entities/chemical_entities.ts";
+import { prisma } from "../../lib/prismaClient";
 
 export default async function createChemical(
   request: Request,
   response: Response,
   next: NextFunction,
 ): Promise<void> {
-  const { name, Description, UN_number, status, risk_class_id }: NewChemical =
+  const { name, description, UN_number, status, risk_class_id }: NewChemical =
     request.body;
 
   try {
     const newChemical = await prisma.chemical.create({
       data: {
         name,
-        Description,
+        description,
         UN_number,
         status,
         risk_class_id,
