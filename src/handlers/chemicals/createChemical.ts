@@ -21,7 +21,7 @@ export default async function createChemical(
       },
     });
 
-    response.json({ data: newChemical });
+    response.status(201).json({ data: newChemical });
   } catch (error) {
     console.error(error);
     next(error);
