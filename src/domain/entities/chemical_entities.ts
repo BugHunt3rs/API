@@ -1,3 +1,4 @@
-import { chemicalModel } from "../../../infrastructure/database/orm/prisma/generated/prisma/models";
+import type { chemical } from "../../../generated/prisma/client";
 
-export type NewChemical = Omit<chemicalModel, "id" | "create_date" | "update_date">;
+export type Chemical = chemical;
+export type NewChemical = Omit<Chemical, "id" | "create_date" | "update_date">;
