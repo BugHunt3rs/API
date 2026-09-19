@@ -9,6 +9,7 @@ app.get("/", (_, response) => {
   response.json({ message: "ok" });
 });
 
+app.use(express.json())
 app.use("/v1", v1Router);
 
 app.listen(port, () => {
