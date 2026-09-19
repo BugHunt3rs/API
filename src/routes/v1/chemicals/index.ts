@@ -4,7 +4,6 @@ import { type chemicalModel } from "../../../../infrastructure/database/orm/pris
 
 export const chemicalRouter = express.Router();
 
-type NewChemical = Omit<chemicalModel, "id">;
 
 chemicalRouter.post("/", async (request, response) => {
   const {
