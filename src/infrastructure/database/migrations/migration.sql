@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS "chemical_cargo" (
 	"destination" VARCHAR(255) NOT NULL,
 	"technical_manager_id" INTEGER NOT NULL,
 	"required_documentation_id" INTEGER NOT NULL,
-	"status" INTEGER NOT NULL,
+	"status_id" INTEGER NOT NULL,
 	"delivery_date" DATE NOT NULL,
 	"create_date" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	"update_date" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -82,7 +82,7 @@ ALTER TABLE "chemical_cargo"
 ADD FOREIGN KEY("measure_unity_id") REFERENCES "measure_unity"("id")
 ON UPDATE NO ACTION ON DELETE NO ACTION;
 ALTER TABLE "chemical_cargo"
-ADD FOREIGN KEY("status") REFERENCES "cargo_status"("id")
+ADD FOREIGN KEY("status_id") REFERENCES "cargo_status"("id")
 ON UPDATE NO ACTION ON DELETE NO ACTION;
 ALTER TABLE "chemical_cargo"
 ADD FOREIGN KEY("technical_manager_id") REFERENCES "technical_manager"("id")

@@ -10,7 +10,7 @@ export type ChemicalCargo = {
   destination: string;
   technical_manager_id: number;
   required_documentation_id: number;
-  status: number;
+  status_id: number;
   delivery_date: Date;
   create_date: Date;
   update_date: Date;
