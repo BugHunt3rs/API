@@ -1,5 +1,5 @@
 import express from "express";
-import { chemicalRouter } from "./chemicals/index";
+import { chemicalRouter } from "./chemicals/chemicalRouter";
 
 export const v1Router = express.Router();
 

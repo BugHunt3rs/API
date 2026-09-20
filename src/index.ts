@@ -1,6 +1,6 @@
 import "dotenv/config";
 import express from "express";
-import v1Router from "./routes/v1/index";
+import v1Router from "./routes/v1/v1Router";
 
 const app = express();
 const port = process?.env?.["PORT"] || 5173;
