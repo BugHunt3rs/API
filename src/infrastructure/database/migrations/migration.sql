@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS "chemical_cargo" (
 	"measure_unity_id" INTEGER NOT NULL,
 	"origin" VARCHAR(255) NOT NULL,
 	"destination" VARCHAR(255) NOT NULL,
-	"tecnical_manager" INTEGER NOT NULL,
+	"technical_manager_id" INTEGER NOT NULL,
 	"required_documentation" INTEGER NOT NULL,
 	"status" INTEGER NOT NULL,
 	"delivery_date" DATE NOT NULL,
