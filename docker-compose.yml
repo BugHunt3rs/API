@@ -6,7 +6,6 @@ services:
     image: postgres:17
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - .infrastructure/database/migrations:/docker-entrypoint-initdb.d
     restart: always
     ports:
       - 5432:5432
