@@ -1,6 +1,5 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -28,24 +27,24 @@ model chemical {
 }
 
 model chemical_cargo {
-  id                                                                                   Int                    @id @default(autoincrement())
-  cargo_code                                                                           String                 @db.VarChar(255)
-  chemical_id                                                                          Int
-  quantity                                                                             BigInt
-  measure_unity_id                                                                     Int
-  origin                                                                               String                 @db.VarChar(255)
-  destination                                                                          String                 @db.VarChar(255)
-  technical_manager_id                                                                 Int
-  required_documentation                                                               Int
-  status                                                                               Int
-  delivery_date                                                                        DateTime               @db.Date
-  create_date                                                                          DateTime               @default(now()) @db.Timestamp(6)
-  update_date                                                                          DateTime               @default(now()) @db.Timestamp(6)
-  chemical                                                                             chemical               @relation(fields: [chemical_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  measure_unity                                                                        measure_unity          @relation(fields: [measure_unity_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  required_documentation_chemical_cargo_required_documentationTorequired_documentation required_documentation @relation("chemical_cargo_required_documentationTorequired_documentation", fields: [required_documentation], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  cargo_status                                                                         cargo_status           @relation(fields: [status], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  technical_manager                                                                    technical_manager      @relation(fields: [technical_manager_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "chemical_cargo_tecnical_manager_fkey")
+  id                        Int                    @id @default(autoincrement())
+  cargo_code                String                 @db.VarChar(255)
+  chemical_id               Int
+  quantity                  BigInt
+  measure_unity_id          Int
+  origin                    String                 @db.VarChar(255)
+  destination               String                 @db.VarChar(255)
+  technical_manager_id      Int
+  required_documentation_id Int
+  status                    Int
+  delivery_date             DateTime               @db.Date
+  create_date               DateTime               @default(now()) @db.Timestamp(6)
+  update_date               DateTime               @default(now()) @db.Timestamp(6)
+  chemical                  chemical               @relation(fields: [chemical_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  measure_unity             measure_unity          @relation(fields: [measure_unity_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  required_documentation    required_documentation @relation(fields: [required_documentation_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "chemical_cargo_required_documentation_fkey")
+  cargo_status              cargo_status           @relation(fields: [status], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  technical_manager         technical_manager      @relation(fields: [technical_manager_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "chemical_cargo_tecnical_manager_fkey")
 }
 
 model logs {
@@ -62,10 +61,10 @@ model measure_unity {
 }
 
 model required_documentation {
-  id                                                                           Int              @id @default(autoincrement())
-  description                                                                  String           @db.VarChar(255)
-  create_date                                                                  DateTime         @default(now()) @db.Timestamp(6)
-  chemical_cargo_chemical_cargo_required_documentationTorequired_documentation chemical_cargo[] @relation("chemical_cargo_required_documentationTorequired_documentation")
+  id             Int              @id @default(autoincrement())
+  description    String           @db.VarChar(255)
+  create_date    DateTime         @default(now()) @db.Timestamp(6)
+  chemical_cargo chemical_cargo[]
 }
 
 model risk_class {

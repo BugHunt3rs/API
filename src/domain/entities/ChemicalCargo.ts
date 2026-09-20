@@ -8,8 +8,8 @@ export type ChemicalCargo = {
   measure_unity_id: number;
   origin: string;
   destination: string;
-  technical_manager: number;
-  required_documentation: number;
+  technical_manager_id: number;
+  required_documentation_id: number;
   status: number;
   delivery_date: Date;
   create_date: Date;
