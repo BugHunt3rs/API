@@ -35,7 +35,7 @@ model chemical_cargo {
   measure_unity_id                                                                     Int
   origin                                                                               String                 @db.VarChar(255)
   destination                                                                          String                 @db.VarChar(255)
-  tecnical_manager                                                                     Int
+  technical_manager_id                                                                 Int
   required_documentation                                                               Int
   status                                                                               Int
   delivery_date                                                                        DateTime               @db.Date
@@ -45,7 +45,7 @@ model chemical_cargo {
   measure_unity                                                                        measure_unity          @relation(fields: [measure_unity_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   required_documentation_chemical_cargo_required_documentationTorequired_documentation required_documentation @relation("chemical_cargo_required_documentationTorequired_documentation", fields: [required_documentation], references: [id], onDelete: NoAction, onUpdate: NoAction)
   cargo_status                                                                         cargo_status           @relation(fields: [status], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  technical_manager                                                                    technical_manager      @relation(fields: [tecnical_manager], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  technical_manager                                                                    technical_manager      @relation(fields: [technical_manager_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "chemical_cargo_tecnical_manager_fkey")
 }
 
 model logs {
