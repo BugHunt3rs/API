@@ -13,8 +13,8 @@ chemicalCargoRouter.post("/", createChemicalCargo);
 chemicalCargoRouter.get("/", readChemicalCargos);
 chemicalCargoRouter.get("/:id", readChemicalCargoById);
 chemicalCargoRouter.patch("/:id", updateChemicalCargoStatus);
-chemicalCargoRouter.patch("/:id", blockChemicalCargo);
-chemicalCargoRouter.patch("/:id", releaseChemicalCargo);
-chemicalCargoRouter.patch("/:id", canceledChemicalCargo);
+chemicalCargoRouter.patch("/block/:id", blockChemicalCargo);
+chemicalCargoRouter.patch("/release/:id", releaseChemicalCargo);
+chemicalCargoRouter.patch("/cancel/:id", canceledChemicalCargo);
 
 export default chemicalCargoRouter;
