@@ -4,6 +4,7 @@ import readChemicalCargos from "../../../application/handlers/chemical_cargo/rea
 import readChemicalCargoById from "../../../application/handlers/chemical_cargo/readChemicalCargoById";
 import updateChemicalCargoStatus from "../../../application/handlers/chemical_cargo/updateChemicalCargoStatus";
 import blockChemicalCargo from "../../../application/handlers/chemical_cargo/blockChemicalCargo";
+import releaseChemicalCargo from "../../../application/handlers/chemical_cargo/ReleaseChemicalCargo";
 
 export const chemicalCargoRouter = express.Router();
 
@@ -12,5 +13,6 @@ chemicalCargoRouter.get("/", readChemicalCargos);
 chemicalCargoRouter.get("/:id", readChemicalCargoById);
 chemicalCargoRouter.patch("/:id", updateChemicalCargoStatus);
 chemicalCargoRouter.patch("/:id", blockChemicalCargo);
+chemicalCargoRouter.patch("/:id", releaseChemicalCargo);
 
 export default chemicalCargoRouter;
