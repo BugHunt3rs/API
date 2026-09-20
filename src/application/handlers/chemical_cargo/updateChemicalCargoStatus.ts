@@ -9,6 +9,7 @@ const updateChemicalCargoStatus = createHandler(
     if (
       !newStatusId ||
       isNaN(+newStatusId) ||
+      Array.isArray(newStatusId) ||
       !Number.isInteger(+newStatusId)
     ) {
       response.status(400).json({ error: ERROR_MESSAGES.INVALID_ID });
