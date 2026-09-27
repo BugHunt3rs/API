@@ -87,3 +87,14 @@ ON UPDATE NO ACTION ON DELETE NO ACTION;
 ALTER TABLE "chemical_cargo"
 ADD FOREIGN KEY("technical_manager_id") REFERENCES "technical_manager"("id")
 ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+INSERT INTO cargo_status (description)
+values 
+('Registered'),
+('Under Analyses'),
+('Under inspection'),
+('Released'),
+('Blocked'),
+('Moving'),
+('Done'),
+('Canceled');
