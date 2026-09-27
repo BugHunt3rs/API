@@ -12,7 +12,7 @@ const ChemicalRepository: IChemicalCargoRepository = {
       origin,
       quantity,
       required_documentation_id,
-      status,
+      status_id,
       technical_manager_id,
     } = newChemicalCargoData;
 
@@ -26,7 +26,7 @@ const ChemicalRepository: IChemicalCargoRepository = {
         origin,
         quantity,
         required_documentation_id,
-        status,
+        status_id,
         technical_manager_id,
       },
     });
@@ -57,7 +57,7 @@ const ChemicalRepository: IChemicalCargoRepository = {
       origin,
       quantity,
       required_documentation_id,
-      status,
+      status_id,
       technical_manager_id,
     } = newData;
     const updatedChemicalCargo = await prisma.chemical_cargo.update({
