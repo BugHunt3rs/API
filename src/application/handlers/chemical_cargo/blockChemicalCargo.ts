@@ -1,4 +1,4 @@
-import ChemicalRepository from "@/infrastructure/database/repositories/chemical_cargo/ChemicalCargoRepository";
+import ChemicalCargoRepository from "@/infrastructure/database/repositories/chemical_cargo/ChemicalCargoRepository";
 import createHandler from "@/utils/createHandler";
 import ERROR_MESSAGES from "@/utils/errorsMessages";
 
@@ -11,13 +11,13 @@ const blockChemicalCargo = createHandler(async ({ request, response }) => {
   }
 
   try {
-    const chemicalCargoToBlock = await ChemicalRepository.readById(+id);
+    const chemicalCargoToBlock = await ChemicalCargoRepository.readById(+id);
     if (!chemicalCargoToBlock) {
       response.status(404).json({ error: ERROR_MESSAGES.NOT_FOUND });
       return;
     }
 
-    const blockedChemicalCargo = ChemicalRepository.update(
+    const blockedChemicalCargo = ChemicalCargoRepository.update(
       chemicalCargoToBlock.id,
       { status_id: 0 }, // TODO - replace ZERO with blocked status id
     );

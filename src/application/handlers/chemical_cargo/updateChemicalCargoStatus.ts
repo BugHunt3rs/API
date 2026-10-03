@@ -1,4 +1,4 @@
-import ChemicalRepository from "@/infrastructure/database/repositories/chemical_cargo/ChemicalCargoRepository";
+import ChemicalCargoRepository from "@/infrastructure/database/repositories/chemical_cargo/ChemicalCargoRepository";
 import createHandler from "@/utils/createHandler";
 import ERROR_MESSAGES from "@/utils/errorsMessages";
 
@@ -18,14 +18,14 @@ const updateChemicalCargoStatus = createHandler(
 
     try {
       const chemicalCargoToUpdate =
-        await ChemicalRepository.readById(+newStatusId);
+        await ChemicalCargoRepository.readById(+newStatusId);
 
       if (!chemicalCargoToUpdate) {
         response.status(404).json({ error: ERROR_MESSAGES.NOT_FOUND });
         return;
       }
 
-      const updatedChemicalCargo = await ChemicalRepository.update(
+      const updatedChemicalCargo = await ChemicalCargoRepository.update(
         chemicalCargoToUpdate.id,
         { status_id: +newStatusId },
       );

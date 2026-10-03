@@ -3,7 +3,7 @@ import cancelChemicalCargo from "@/application/handlers/chemical_cargo/cancelChe
 import { createChemicalCargo } from "@/application/handlers/chemical_cargo/createChemicalCargo";
 import readChemicalCargoById from "@/application/handlers/chemical_cargo/readChemicalCargoById";
 import readChemicalCargos from "@/application/handlers/chemical_cargo/readChemicalCargos";
-import releaseChemicalCargo from "@/application/handlers/chemical_cargo/ReleaseChemicalCargo";
+import releaseChemicalCargo from "@/application/handlers/chemical_cargo/releaseChemicalCargo";
 import updateChemicalCargoStatus from "@/application/handlers/chemical_cargo/updateChemicalCargoStatus";
 import express from "express";
 

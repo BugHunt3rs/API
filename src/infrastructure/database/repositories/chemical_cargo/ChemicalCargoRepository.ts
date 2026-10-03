@@ -1,7 +1,7 @@
 import type IChemicalCargoRepository from "../../../../domain/repositories/IChemicalCargoRepository";
 import { prisma } from "../../prismaClient";
 
-const ChemicalRepository: IChemicalCargoRepository = {
+const ChemicalCargoRepository: IChemicalCargoRepository = {
   create: async (newChemicalCargoData) => {
     const {
       cargo_code,
@@ -88,4 +88,4 @@ const ChemicalRepository: IChemicalCargoRepository = {
   },
 };
 
-export default ChemicalRepository;
+export default ChemicalCargoRepository;

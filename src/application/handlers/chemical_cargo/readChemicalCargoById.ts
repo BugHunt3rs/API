@@ -1,4 +1,4 @@
-import ChemicalRepository from "@/infrastructure/database/repositories/chemical_cargo/ChemicalCargoRepository";
+import ChemicalCargoRepository from "@/infrastructure/database/repositories/chemical_cargo/ChemicalCargoRepository";
 import createHandler from "@/utils/createHandler";
 import ERROR_MESSAGES from "@/utils/errorsMessages";
 
@@ -11,7 +11,7 @@ const readChemicalCargoById = createHandler(async ({ request, response }) => {
     return;
   }
 
-  const chemicalCargo = await ChemicalRepository.readById(+id);
+  const chemicalCargo = await ChemicalCargoRepository.readById(+id);
 
   response.status(200).json({ data: chemicalCargo });
   try {
