@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
-import ERROR_MESSAGES from "../../../utils/ErrorsMessages";
 import ChemicalRepository from "../../../infrastructure/database/repositories/chemical/ChemicalRepository";
+import ERROR_MESSAGES from "@/utils/errorsMessages";
 
 export default async function deleteChemical(
   request: Request,
