@@ -1,6 +1,7 @@
-import ChemicalRepository from "../../../infrastructure/database/repositories/chemical_cargo/ChemicalCargoRepository";
-import createHandler from "../../../utils/createHandler";
-import ERROR_MESSAGES from "../../../utils/ErrorsMessages";
+import ChemicalRepository from "@/infrastructure/database/repositories/chemical_cargo/ChemicalCargoRepository";
+import createHandler from "@/utils/createHandler";
+import ERROR_MESSAGES from "@/utils/ErrorsMessages";
+
 
 const releaseChemicalCargo = createHandler(async ({ request, response }) => {
   const { id } = request.params;

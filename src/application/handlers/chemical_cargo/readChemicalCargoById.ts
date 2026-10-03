@@ -1,7 +1,7 @@
-import { prisma } from "../../../infrastructure/database/prismaClient";
-import ChemicalRepository from "../../../infrastructure/database/repositories/chemical_cargo/ChemicalCargoRepository";
-import createHandler from "../../../utils/createHandler";
-import ERROR_MESSAGES from "../../../utils/ErrorsMessages";
+import ChemicalRepository from "@/infrastructure/database/repositories/chemical_cargo/ChemicalCargoRepository";
+import createHandler from "@/utils/createHandler";
+import ERROR_MESSAGES from "@/utils/ErrorsMessages";
+
 
 const readChemicalCargoById = createHandler(async ({ request, response }) => {
   const { id } = request.params;
