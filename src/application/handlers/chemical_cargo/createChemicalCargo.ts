@@ -10,7 +10,7 @@ export const createChemicalCargo = createHandler(
     
 
     try {
-      const newChemicalCargo = ChemicalRepository.create(body);
+      const newChemicalCargo = await ChemicalRepository.create(body);
       response.status(201).json({ data: newChemicalCargo });
     } catch (error) {
       console.error(error);
