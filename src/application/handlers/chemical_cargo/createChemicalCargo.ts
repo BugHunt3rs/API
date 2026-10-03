@@ -1,12 +1,13 @@
 import type { NewChemicalCargo } from "@/domain/entities/ChemicalCargo";
 import ChemicalRepository from "@/infrastructure/database/repositories/chemical_cargo/ChemicalCargoRepository";
 import createHandler from "@/utils/createHandler";
-import ERROR_MESSAGES from "@/utils/ErrorsMessages";
+import ERROR_MESSAGES from "@/utils/errorsMessages";
 
 export const createChemicalCargo = createHandler(
   async ({ request, response }) => {
     const body: NewChemicalCargo = request.body;
     // Todo - VALIDADE REQUEST BODY
+    
 
     try {
       const newChemicalCargo = ChemicalRepository.create(body);
