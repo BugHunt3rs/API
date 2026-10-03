@@ -1,4 +1,4 @@
-import type { NewEntity } from "../../utils/NewEntity";
+import type { NewEntity } from "../../types/NewEntity";
 
 export type ChemicalCargo = {
   id: number;
