@@ -18,9 +18,9 @@ const cancelChemicalCargo = createHandler(async ({ request, response }) => {
       return;
     }
 
-    const canceledChemicalCargo = ChemicalCargoRepository.update(
+    const canceledChemicalCargo = await ChemicalCargoRepository.update(
       chemicalCargoToCancel.id,
-      { status_id: 0 }, // TODO - replace ZERO with canceled status id
+      { status_id: 8 }, // TODO - replace with status lookup (cargo_status: Canceled)
     );
 
     response.status(200).json({ data: canceledChemicalCargo });

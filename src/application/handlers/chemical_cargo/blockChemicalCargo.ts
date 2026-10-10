@@ -17,9 +17,9 @@ const blockChemicalCargo = createHandler(async ({ request, response }) => {
       return;
     }
 
-    const blockedChemicalCargo = ChemicalCargoRepository.update(
+    const blockedChemicalCargo = await ChemicalCargoRepository.update(
       chemicalCargoToBlock.id,
-      { status_id: 0 }, // TODO - replace ZERO with blocked status id
+      { status_id: 5 }, // TODO - replace with status lookup (cargo_status: Blocked)
     );
 
     response.status(200).json({ data: blockedChemicalCargo });

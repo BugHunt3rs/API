@@ -18,9 +18,9 @@ const releaseChemicalCargo = createHandler(async ({ request, response }) => {
       return;
     }
 
-    const releasedChemicalCargo = ChemicalCargoRepository.update(
+    const releasedChemicalCargo = await ChemicalCargoRepository.update(
       chemicalCargoToRelease.id,
-      { status_id: 0 }, // TODO - replace ZERO with released status id
+      { status_id: 4 }, // TODO - replace with status lookup (cargo_status: Released)
     );
 
     response.status(200).json({ data: releasedChemicalCargo });
