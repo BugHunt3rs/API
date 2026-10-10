@@ -2,6 +2,7 @@ import type { NextFunction, Request, Response } from "express";
 import type { NewChemical } from "../../../domain/entities/Chemical";
 import ChemicalRepository from "../../../infrastructure/database/repositories/chemical/ChemicalRepository";
 
+import ERROR_MESSAGES from "@/utils/errorsMessages";
 export default async function updateChemical(
   request: Request,
   response: Response,
@@ -10,8 +11,8 @@ export default async function updateChemical(
   try {
     const { id } = request.params;
 
-    if (!id || isNaN(+id)) {
-      response.status(500).json({ error: "Invalid ID" });
+    if (!id || Array.isArray(id) || isNaN(+id) || !Number.isInteger(+id)) {
+      response.status(400).json({ error: ERROR_MESSAGES.INVALID_ID });
       return;
     }
 
