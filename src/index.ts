@@ -2,6 +2,13 @@ import "dotenv/config";
 import express from "express";
 import v1Router from "./routes/v1/v1Router";
 
+// chemical_cargo.quantity is a BigInt, which JSON.stringify cannot serialize
+(BigInt.prototype as unknown as { toJSON: () => number }).toJSON = function (
+  this: bigint,
+) {
+  return Number(this);
+};
+
 const app = express();
 const port = process?.env?.["PORT"] || 5173;
 
