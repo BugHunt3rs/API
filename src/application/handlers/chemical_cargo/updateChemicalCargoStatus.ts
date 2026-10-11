@@ -1,5 +1,6 @@
 import ChemicalCargoRepository from "@/infrastructure/database/repositories/chemical_cargo/ChemicalCargoRepository";
 import ChemicalCargoStatusRepository from "@/infrastructure/database/repositories/chemical_cargo_status/ChemicalCargoStatusRepository";
+import canMoveChemicalCargo from "@/utils/canMoveChemicalCargo";
 import createHandler from "@/utils/createHandler";
 import ERROR_MESSAGES from "@/utils/errorsMessages";
 
@@ -24,6 +25,16 @@ const updateChemicalCargoStatus = createHandler(
       if (!chemicalCargoToUpdate) {
         response.status(404).json({ error: ERROR_MESSAGES.NOT_FOUND });
         return;
+      }
+
+      const { canMove, cannotMoveReasons } = await canMoveChemicalCargo(
+        chemicalCargoToUpdate,
+      );
+
+      if (!canMove) {
+        response.status(403).json({
+          error: `${ERROR_MESSAGES.FORBIDDEN} - ${JSON.stringify(cannotMoveReasons)}`,
+        });
       }
 
       const newStatus =
