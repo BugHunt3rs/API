@@ -6,7 +6,7 @@ import ERROR_MESSAGES from "@/utils/errorsMessages";
 const readChemicalCargoById = createHandler(async ({ request, response }) => {
   const { id } = request.params;
 
-  if (!id || isNaN(+id) || !Number.isInteger(+id)) {
+  if (!id || isNaN(+id) || Array.isArray(id) || !Number.isInteger(+id)) {
     response.status(400).json({ error: ERROR_MESSAGES.INVALID_ID });
     return;
   }
