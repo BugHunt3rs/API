@@ -2,7 +2,7 @@ export const ChemicalCargoStatus = {
   registered: "Registered",
   underAnalyses: "Under Analyses",
   underInspection: "Under inspection",
-  releases: "Released",
+  released: "Released",
   blocked: "Blocked",
   moving: "Moving",
   done: "Done",
