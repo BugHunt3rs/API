@@ -11,10 +11,14 @@ const readChemicalCargoById = createHandler(async ({ request, response }) => {
     return;
   }
 
-  const chemicalCargo = await ChemicalCargoRepository.readById(+id);
-
-  response.status(200).json({ data: chemicalCargo });
   try {
+    const chemicalCargo = await ChemicalCargoRepository.readById(+id);
+
+    if (!chemicalCargo) {
+      response.status(404).json({ error: ERROR_MESSAGES.NOT_FOUND });
+    }
+
+    response.status(200).json({ data: chemicalCargo });
   } catch (error) {
     console.error(error);
     response.status(500).json({ error: ERROR_MESSAGES.UNEXPECTED_ERROR });
