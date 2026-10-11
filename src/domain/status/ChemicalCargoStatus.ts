@@ -6,7 +6,7 @@ export const ChemicalCargoStatus = {
   blocked: "Blocked",
   moving: "Moving",
   done: "Done",
-  canceleted: "Canceled",
+  canceled: "Canceled",
 };
 
 export default ChemicalCargoStatus;

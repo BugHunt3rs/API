@@ -20,7 +20,7 @@ export default async function canMoveChemicalCargo(cargo: ChemicalCargo) {
     cannotMoveReasons.push(CANNOT_MOVE_REASON.STATUS_NOT_FOUND);
   }
 
-  if (cargoStatus?.description === ChemicalCargoStatus.canceleted) {
+  if (cargoStatus?.description === ChemicalCargoStatus.canceled) {
     canMove = false;
     cannotMoveReasons.push(CANNOT_MOVE_REASON.STATUS_BLOCKED);
   }
