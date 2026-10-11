@@ -1,0 +1,19 @@
+@baseUrl = http://localhost:3000/v1/chemicalCargoStatus
+### Create_Chemical_Cargo_Status
+POST {{baseUrl}}
+Content-Type: application/json
+
+{
+  "description": "test"
+}
+### Get_Chemical_Cargo_Status_By_Id
+@id = {{:"status_id: "}}
+GET {{baseUrl}}/{{id}}
+Content-Type: application/json
+
+### Get_All_Chemical_Cargo_Status
+GET {{baseUrl}}
+
+### Delete_Chemical_Cargo_Status_By_Id
+@id = {{:"to delete status_id: "}}
+DELETE {{baseUrl}}/{{id}}
