@@ -1,4 +1,5 @@
 import ChemicalCargoRepository from "@/infrastructure/database/repositories/chemical_cargo/ChemicalCargoRepository";
+import ChemicalCargoStatusRepository from "@/infrastructure/database/repositories/chemical_cargo_status/ChemicalCargoStatusRepository";
 import createHandler from "@/utils/createHandler";
 import ERROR_MESSAGES from "@/utils/errorsMessages";
 
@@ -25,9 +26,17 @@ const updateChemicalCargoStatus = createHandler(
         return;
       }
 
+      const newStatus =
+        await ChemicalCargoStatusRepository.readById(+newStatusId);
+
+      if (!newStatus) {
+        response.status(400).json({ error: ERROR_MESSAGES.BAD_REQUEST });
+        return;
+      }
+
       const updatedChemicalCargo = await ChemicalCargoRepository.update(
         chemicalCargoToUpdate.id,
-        { status_id: +newStatusId },
+        { status_id: newStatus.id },
       );
 
       response.status(200).json({ data: updatedChemicalCargo });
