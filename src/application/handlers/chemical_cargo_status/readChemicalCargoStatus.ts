@@ -2,7 +2,7 @@ import ChemicalCargoStatusRepository from "@/infrastructure/database/repositorie
 import createHandler from "@/utils/createHandler";
 import ERROR_MESSAGES from "@/utils/errorsMessages";
 
-const readChemicalCargo = createHandler(async ({ response }) => {
+const readChemicalCargoStatus = createHandler(async ({ response }) => {
   try {
     const chemicalCargosStatus = await ChemicalCargoStatusRepository.readAll();
 
@@ -13,4 +13,4 @@ const readChemicalCargo = createHandler(async ({ response }) => {
   }
 });
 
-export default readChemicalCargo;
+export default readChemicalCargoStatus;
