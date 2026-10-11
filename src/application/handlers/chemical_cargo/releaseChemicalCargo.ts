@@ -1,4 +1,6 @@
+import ChemicalCargoStatus from "@/domain/status/ChemicalCargoStatus";
 import ChemicalCargoRepository from "@/infrastructure/database/repositories/chemical_cargo/ChemicalCargoRepository";
+import ChemicalCargoStatusRepository from "@/infrastructure/database/repositories/chemical_cargo_status/ChemicalCargoStatusRepository";
 import createHandler from "@/utils/createHandler";
 import ERROR_MESSAGES from "@/utils/errorsMessages";
 
@@ -19,6 +21,20 @@ const releaseChemicalCargo = createHandler(async ({ request, response }) => {
     }
 
     if (!chemicalCargoToRelease.required_documentation_id) {
+      response.status(403).json({ error: ERROR_MESSAGES.FORBIDDEN });
+      return;
+    }
+
+    const chemicalCargoStatus = await ChemicalCargoStatusRepository.readById(
+      chemicalCargoToRelease.status_id,
+    );
+
+    if (!chemicalCargoStatus) {
+      response.status(500).json({ error: ERROR_MESSAGES.UNEXPECTED_ERROR });
+      return;
+    }
+
+    if (chemicalCargoStatus.description === ChemicalCargoStatus.blocked) {
       response.status(403).json({ error: ERROR_MESSAGES.FORBIDDEN });
       return;
     }
