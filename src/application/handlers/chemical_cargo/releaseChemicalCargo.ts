@@ -2,7 +2,6 @@ import ChemicalCargoRepository from "@/infrastructure/database/repositories/chem
 import createHandler from "@/utils/createHandler";
 import ERROR_MESSAGES from "@/utils/errorsMessages";
 
-
 const releaseChemicalCargo = createHandler(async ({ request, response }) => {
   const { id } = request.params;
 
@@ -13,8 +12,14 @@ const releaseChemicalCargo = createHandler(async ({ request, response }) => {
 
   try {
     const chemicalCargoToRelease = await ChemicalCargoRepository.readById(+id);
+
     if (!chemicalCargoToRelease) {
       response.status(404).json({ error: ERROR_MESSAGES.NOT_FOUND });
+      return;
+    }
+
+    if (!chemicalCargoToRelease.required_documentation_id) {
+      response.status(403).json({ error: ERROR_MESSAGES.FORBIDDEN });
       return;
     }
 
