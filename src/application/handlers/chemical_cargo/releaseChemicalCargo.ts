@@ -39,9 +39,20 @@ const releaseChemicalCargo = createHandler(async ({ request, response }) => {
       return;
     }
 
+    const releasedCargoStatusId = (
+      await ChemicalCargoStatusRepository.readAll()
+    ).find(
+      (cargoStatus) => cargoStatus.description === ChemicalCargoStatus.released,
+    )?.id;
+
+    if (!releasedCargoStatusId) {
+      response.status(500).json({ error: ERROR_MESSAGES.UNEXPECTED_ERROR });
+      return;
+    }
+
     const releasedChemicalCargo = ChemicalCargoRepository.update(
       chemicalCargoToRelease.id,
-      { status_id: 0 }, // TODO - replace ZERO with released status id
+      { status_id: releasedCargoStatusId },
     );
 
     response.status(200).json({ data: releasedChemicalCargo });
