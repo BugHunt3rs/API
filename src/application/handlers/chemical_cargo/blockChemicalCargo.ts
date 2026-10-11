@@ -30,7 +30,7 @@ const blockChemicalCargo = createHandler(async ({ request, response }) => {
       return;
     }
 
-    const blockedChemicalCargo = ChemicalCargoRepository.update(
+    const blockedChemicalCargo = await ChemicalCargoRepository.update(
       chemicalCargoToBlock.id,
       { status_id: blockedStatusId },
     );
