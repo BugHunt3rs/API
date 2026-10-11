@@ -6,7 +6,7 @@ import hasProperties from "@/utils/hasProperty";
 
 const createChemicalCargoStatus = createHandler(
   async ({ request, response }) => {
-    const body: NewChemicalCargoStatus = request.body();
+    const body: NewChemicalCargoStatus = request.body;
 
     if (!hasProperties(body, ["description"])) {
       response.status(400).json({ error: ERROR_MESSAGES.BAD_REQUEST });
