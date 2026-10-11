@@ -10,12 +10,17 @@ export const createChemicalCargo = createHandler(
   async ({ request, response }) => {
     const body: NewChemicalCargo = request.body;
 
-    if (!hasProperties(body, ["chemical_id"])) {
+    if (!hasProperties(body, ["chemical_id", "quantity"])) {
       response.status(400).json({ error: ERROR_MESSAGES.BAD_REQUEST });
       return;
     }
 
     try {
+      if (body.quantity <= 0) {
+        response.status(400).json({ error: ERROR_MESSAGES.BAD_REQUEST });
+        return;
+      }
+
       const chemical = await ChemicalCargoRepository.readById(body.chemical_id);
       if (!chemical) {
         response.status(400).json({ error: ERROR_MESSAGES.UNEXPECTED_ERROR });
