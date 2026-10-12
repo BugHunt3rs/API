@@ -1,11 +1,11 @@
 info:
-  name: Get_chemical_by_id
+  name: get_chemicals
   type: http
-  seq: 1
+  seq: 3
 
 http:
   method: GET
-  url: "{{baseUrl}}/chemical/{{?Prompt chemical_id}}"
+  url: "{{baseUrl}}/chemical"
   auth: inherit
 
 settings:
