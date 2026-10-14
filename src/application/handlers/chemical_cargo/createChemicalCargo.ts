@@ -1,4 +1,5 @@
 import type { NewChemicalCargo } from "@/domain/entities/ChemicalCargo";
+import ChemicalRepository from "@/infrastructure/database/repositories/chemical/ChemicalRepository";
 import ChemicalCargoRepository from "@/infrastructure/database/repositories/chemical_cargo/ChemicalCargoRepository";
 import createHandler from "@/utils/createHandler";
 import ERROR_MESSAGES from "@/utils/errorsMessages";
@@ -8,15 +9,15 @@ export const createChemicalCargo = createHandler(
   async ({ request, response }) => {
     const body: NewChemicalCargo = request.body;
 
-    if (!hasProperties(body, ["chemical_id"])) {
+    if (!hasProperties(body, ["chemical_id"]) || !(Number(body.quantity) > 0)) {
       response.status(400).json({ error: ERROR_MESSAGES.BAD_REQUEST });
       return;
     }
 
     try {
-      const chemical = await ChemicalCargoRepository.readById(body.chemical_id);
-      if (!chemical) {
-        response.status(400).json({ error: ERROR_MESSAGES.UNEXPECTED_ERROR });
+      const chemical = await ChemicalRepository.readById(body.chemical_id);
+      if (!chemical || !chemical.status) {
+        response.status(400).json({ error: ERROR_MESSAGES.BAD_REQUEST });
         return;
       }
 
