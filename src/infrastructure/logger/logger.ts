@@ -21,9 +21,11 @@ type LoggerArgs = {
 };
 
 const LOG_DIRECTORY_PATH = path.resolve(process.cwd(), "logs");
+
 function createDirectorySync(directoryPath: string) {
   fileSystem.mkdirSync(directoryPath, { recursive: true });
 }
+
 function createFile(fileName: string, fileExtension: string = "txt") {
   const createPath = path.resolve(
     LOG_DIRECTORY_PATH,
@@ -35,6 +37,22 @@ function createFile(fileName: string, fileExtension: string = "txt") {
     fileSystem.writeFileSync(createPath, "", { flag: "w" });
   } catch (error) {
     console.error(`Cannot create log file at ${createPath} - ${error}`);
+  }
+}
+
+function appendToFile(
+  fileName: string,
+  text: string,
+  fileExtension: string = "txt",
+) {
+  const appendPath = path.resolve(
+    LOG_DIRECTORY_PATH,
+    `${fileName}.${fileExtension}`,
+  );
+  try {
+    fileSystem.appendFileSync(appendPath, text);
+  } catch (error) {
+    console.error(`Could not append to log file at ${appendPath} - ${error}`);
   }
 }
 
@@ -80,4 +98,7 @@ export default function logger({
       console.error(`${error}`);
       break;
   }
+
+  const newLogContent = `${logType} - new_value: ${newValue} | old_value: ${oldValue} | error: ${error} | info: ${info} | warning: ${warning}`;
+  appendToFile(fileName, newLogContent);
 }
