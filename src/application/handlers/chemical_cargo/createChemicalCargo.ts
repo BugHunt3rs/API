@@ -1,7 +1,6 @@
 import type { NewChemicalCargo } from "@/domain/entities/ChemicalCargo";
-import ChemicalCargoStatus from "@/domain/status/ChemicalCargoStatus";
+import ChemicalRepository from "@/infrastructure/database/repositories/chemical/ChemicalRepository";
 import ChemicalCargoRepository from "@/infrastructure/database/repositories/chemical_cargo/ChemicalCargoRepository";
-import ChemicalCargoStatusRepository from "@/infrastructure/database/repositories/chemical_cargo_status/ChemicalCargoStatusRepository";
 import createHandler from "@/utils/createHandler";
 import ERROR_MESSAGES from "@/utils/errorsMessages";
 import hasProperties from "@/utils/hasProperty";
@@ -28,25 +27,12 @@ export const createChemicalCargo = createHandler(
     }
 
     try {
-      const chemical = await ChemicalCargoRepository.readById(body.chemical_id);
-      if (!chemical) {
+      const chemical = await ChemicalRepository.readById(body.chemical_id);
+      if (!chemical || !chemical.status) {
         response.status(400).json({ error: ERROR_MESSAGES.BAD_REQUEST });
         return;
       }
 
-      const chemicalStatus = await ChemicalCargoStatusRepository.readById(
-        chemical.status_id,
-      );
-
-      if (!chemicalStatus) {
-        response.status(500).json({ error: ERROR_MESSAGES.UNEXPECTED_ERROR });
-        return;
-      }
-
-      if (chemicalStatus.description === ChemicalCargoStatus.blocked) {
-        response.status(403).json({ error: ERROR_MESSAGES.FORBIDDEN });
-        return;
-      }
       const newChemicalCargo = await ChemicalCargoRepository.create(body);
       response.status(201).json({ data: newChemicalCargo });
     } catch (error) {
