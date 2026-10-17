@@ -7,10 +7,9 @@ type MiddlewareFunctionArgs = {
 };
 
 export default function createMiddleware(
-  middlewareHandlerFunc: (
-    middlewareArgs: MiddlewareFunctionArgs,
-  ) => Promise<any>,
+  middlewareHandlerFunc: (middlewareArgs: MiddlewareFunctionArgs) => void,
 ) {
-  return (middlewareArgs: MiddlewareFunctionArgs) =>
-    middlewareHandlerFunc(middlewareArgs);
+  return (request: Request, response: Response, next: NextFunction) => {
+    middlewareHandlerFunc({ request, response, next });
+  };
 }
