@@ -1,5 +1,6 @@
 import type { NewChemical } from "@/domain/entities/Chemical";
 import ChemicalRepository from "@/infrastructure/database/repositories/chemical/ChemicalRepository";
+import logger from "@/infrastructure/logger/logger";
 import createHandler from "@/utils/createHandler";
 import ERROR_MESSAGES from "@/utils/errorsMessages";
 import hasProperties from "@/utils/hasProperty";
@@ -21,6 +22,11 @@ const createChememical = createHandler(async ({ request, response }) => {
 
   try {
     const newChemical = await ChemicalRepository.create(body);
+    logger({
+      logType: "CREATE",
+      newValue: JSON.stringify(newChemical),
+      oldValue: null,
+    });
     response.status(201).json({ data: newChemical });
   } catch (error) {
     console.error(error);

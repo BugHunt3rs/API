@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import ChemicalRepository from "../../../infrastructure/database/repositories/chemical/ChemicalRepository";
 import ERROR_MESSAGES from "@/utils/errorsMessages";
+import logger from "@/infrastructure/logger/logger";
 
 export default async function deleteChemical(
   request: Request,
@@ -23,6 +24,7 @@ export default async function deleteChemical(
 
     const deletedChemical = await ChemicalRepository.delete(+id);
 
+    logger({ logType: "DELETE", oldValue: deletedChemical, newValue: null });
     response.status(200).json({ data: deletedChemical });
   } catch (error) {
     console.error(error);
