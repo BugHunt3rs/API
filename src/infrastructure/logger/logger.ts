@@ -1,4 +1,6 @@
 import ERROR_MESSAGES from "@/utils/errorsMessages";
+import fileSystem from "node:fs";
+import path from "node:path";
 const LOG_TYPE = {
   INFO: "INFO",
   WARNING: "WARNING",
@@ -18,6 +20,9 @@ type LoggerArgs = {
   warning?: string;
 };
 
+function createDirectorySync(directoryPath: string) {
+  fileSystem.mkdirSync(directoryPath, { recursive: true });
+}
 export default function logger({
   logType,
   newValue,
