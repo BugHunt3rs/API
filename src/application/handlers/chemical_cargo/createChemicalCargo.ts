@@ -9,7 +9,19 @@ export const createChemicalCargo = createHandler(
   async ({ request, response }) => {
     const body: NewChemicalCargo = request.body;
 
-    if (!hasProperties(body, ["chemical_id"]) || !(Number(body.quantity) > 0)) {
+    if (
+      !hasProperties(body, ["chemical_id", "quantity", "technical_manager_id"])
+    ) {
+      response.status(400).json({ error: ERROR_MESSAGES.BAD_REQUEST });
+      return;
+    }
+
+    if (body.quantity <= 0) {
+      response.status(400).json({ error: ERROR_MESSAGES.BAD_REQUEST });
+      return;
+    }
+
+    if (!body.technical_manager_id) {
       response.status(400).json({ error: ERROR_MESSAGES.BAD_REQUEST });
       return;
     }

@@ -1,0 +1,6 @@
+dist/
+.git/
+docs/
+http_requests/
+node_modules/
+

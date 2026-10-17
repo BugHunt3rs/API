@@ -3,6 +3,7 @@ const ERROR_MESSAGES = {
   NOT_FOUND: "Not Found",
   UNEXPECTED_ERROR: "Unexpected Error",
   BAD_REQUEST: "Bad Request",
+  FORBIDDEN: "Forbidden",
 } as const;
 
 export default ERROR_MESSAGES;

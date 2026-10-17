@@ -7,4 +7,4 @@ import type IRepository from "./IRepository";
 export default interface IChemicalCargoRepository extends IRepository<
   ChemicalCargo,
   NewChemicalCargo
-> {}
+> { }

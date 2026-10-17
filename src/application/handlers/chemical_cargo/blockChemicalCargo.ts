@@ -1,4 +1,6 @@
+import ChemicalCargoStatus from "@/domain/status/ChemicalCargoStatus";
 import ChemicalCargoRepository from "@/infrastructure/database/repositories/chemical_cargo/ChemicalCargoRepository";
+import ChemicalCargoStatusRepository from "@/infrastructure/database/repositories/chemical_cargo_status/ChemicalCargoStatusRepository";
 import createHandler from "@/utils/createHandler";
 import ERROR_MESSAGES from "@/utils/errorsMessages";
 
@@ -17,9 +19,20 @@ const blockChemicalCargo = createHandler(async ({ request, response }) => {
       return;
     }
 
-    const blockedChemicalCargo = ChemicalCargoRepository.update(
+    const blockedStatusId = (
+      await ChemicalCargoStatusRepository.readAll()
+    ).find(
+      (cargoStatus) => cargoStatus.description === ChemicalCargoStatus.blocked,
+    )?.id;
+
+    if (!blockedStatusId) {
+      response.status(500).json({ error: ERROR_MESSAGES.UNEXPECTED_ERROR });
+      return;
+    }
+
+    const blockedChemicalCargo = await ChemicalCargoRepository.update(
       chemicalCargoToBlock.id,
-      { status_id: 0 }, // TODO - replace ZERO with blocked status id
+      { status_id: blockedStatusId },
     );
 
     response.status(200).json({ data: blockedChemicalCargo });
@@ -30,5 +43,4 @@ const blockChemicalCargo = createHandler(async ({ request, response }) => {
   }
 });
 
-
-export default blockChemicalCargo
+export default blockChemicalCargo;
