@@ -20,9 +20,24 @@ type LoggerArgs = {
   warning?: string;
 };
 
+const LOG_DIRECTORY_PATH = path.resolve(process.cwd(), "logs");
 function createDirectorySync(directoryPath: string) {
   fileSystem.mkdirSync(directoryPath, { recursive: true });
 }
+function createFile(fileName: string, fileExtension: string = "txt") {
+  const createPath = path.resolve(
+    LOG_DIRECTORY_PATH,
+    `${fileName}.${fileExtension}`,
+  );
+
+  try {
+    createDirectorySync(LOG_DIRECTORY_PATH);
+    fileSystem.writeFileSync(createPath, "", { flag: "w" });
+  } catch (error) {
+    console.error(`Cannot create log file at ${createPath} - ${error}`);
+  }
+}
+
 export default function logger({
   logType,
   newValue,
@@ -31,6 +46,14 @@ export default function logger({
   info,
   warning,
 }: LoggerArgs) {
+  const fileName = new Date().toISOString().split("T")[0];
+
+  if (!fileName) {
+    throw new Error("Could not crate log file name");
+  }
+
+  createFile(fileName);
+
   newValue = JSON.stringify(newValue, null, 2);
   oldValue = JSON.stringify(oldValue, null, 2);
 
