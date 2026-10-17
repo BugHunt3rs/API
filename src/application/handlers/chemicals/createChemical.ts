@@ -1,27 +1,31 @@
-import type { Request, Response, NextFunction } from "express";
-import type { NewChemical } from "../../../domain/entities/Chemical";
-import ChemicalRepository from "../../../infrastructure/database/repositories/chemical/ChemicalRepository";
+import type { NewChemical } from "@/domain/entities/Chemical";
+import ChemicalRepository from "@/infrastructure/database/repositories/chemical/ChemicalRepository";
+import createHandler from "@/utils/createHandler";
+import ERROR_MESSAGES from "@/utils/errorsMessages";
+import hasProperties from "@/utils/hasProperty";
 
-export default async function createChemical(
-  request: Request,
-  response: Response,
-  next: NextFunction,
-): Promise<void> {
-  const { name, description, UN_number, status, risk_class_id }: NewChemical =
-    request.body;
+const createChememical = createHandler(async ({ request, response }) => {
+  const body: NewChemical = request.body;
+  if (
+    !hasProperties(body, [
+      "name",
+      "description",
+      "UN_number",
+      "risk_class_id",
+      "status",
+    ])
+  ) {
+    response.status(400).json({ error: ERROR_MESSAGES.BAD_REQUEST });
+    return;
+  }
 
   try {
-    const newChemical = await ChemicalRepository.create({
-      name,
-      description,
-      UN_number,
-      status,
-      risk_class_id,
-    });
-
+    const newChemical = await ChemicalRepository.create(body);
     response.status(201).json({ data: newChemical });
   } catch (error) {
     console.error(error);
-    next(error);
+    response.status(500).json({ error: ERROR_MESSAGES.UNEXPECTED_ERROR });
   }
-}
+});
+
+export default createChememical;
