@@ -1,5 +1,6 @@
 import ERROR_MESSAGES from "@/utils/errorsMessages";
 import fileSystem from "node:fs";
+import { EOL } from "node:os";
 import path from "node:path";
 const LOG_TYPE = {
   INFO: "INFO",
@@ -32,6 +33,8 @@ function createFile(fileName: string, fileExtension: string = "txt") {
     `${fileName}.${fileExtension}`,
   );
 
+  if (fileSystem.existsSync(LOG_DIRECTORY_PATH)) return;
+
   try {
     createDirectorySync(LOG_DIRECTORY_PATH);
     fileSystem.writeFileSync(createPath, "", { flag: "w" });
@@ -45,14 +48,16 @@ function appendToFile(
   text: string,
   fileExtension: string = "txt",
 ) {
-  const appendPath = path.resolve(
+  const appendFilePath = path.resolve(
     LOG_DIRECTORY_PATH,
     `${fileName}.${fileExtension}`,
   );
   try {
-    fileSystem.appendFileSync(appendPath, text);
+    fileSystem.appendFileSync(appendFilePath, `${text}${EOL}`, "utf-8");
   } catch (error) {
-    console.error(`Could not append to log file at ${appendPath} - ${error}`);
+    console.error(
+      `Could not append to log file at ${appendFilePath} - ${error}`,
+    );
   }
 }
 
