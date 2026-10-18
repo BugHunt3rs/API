@@ -5,7 +5,7 @@ import createHandler from "@/utils/createHandler";
 import ERROR_MESSAGES from "@/utils/errorsMessages";
 import hasProperties from "@/utils/hasProperty";
 
-const createChememical = createHandler(async ({ request, response }) => {
+const createChemical = createHandler(async ({ request, response }) => {
   const body: NewChemical = request.body;
   if (
     !hasProperties(body, [
