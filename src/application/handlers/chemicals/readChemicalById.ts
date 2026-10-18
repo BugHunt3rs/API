@@ -18,9 +18,15 @@ const readChemicalById = createHandler(async ({ request, response }) => {
       return;
     }
 
+    if (!chemical) {
+      response.status(404).json({ error: ERROR_MESSAGES.NOT_FOUND });
+      return;
+    }
+
     response.status(200).json({ data: chemical });
   } catch (error) {
     console.error(error);
+    response.status(500).json({ error: ERROR_MESSAGES.UNEXPECTED_ERROR });
     response.status(500).json({ error: ERROR_MESSAGES.UNEXPECTED_ERROR });
   }
 });

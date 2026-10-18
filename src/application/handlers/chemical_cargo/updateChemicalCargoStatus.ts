@@ -6,21 +6,21 @@ import ERROR_MESSAGES from "@/utils/errorsMessages";
 
 const updateChemicalCargoStatus = createHandler(
   async ({ request, response }) => {
-    const { newStatusId } = request.params;
+    const { id } = request.params;
+    const { status_id } = request.body ?? {};
 
-    if (
-      !newStatusId ||
-      isNaN(+newStatusId) ||
-      Array.isArray(newStatusId) ||
-      !Number.isInteger(+newStatusId)
-    ) {
+    if (!id || isNaN(+id) || Array.isArray(id) || !Number.isInteger(+id)) {
       response.status(400).json({ error: ERROR_MESSAGES.INVALID_ID });
       return;
     }
 
+    if (!Number.isInteger(status_id)) {
+      response.status(400).json({ error: ERROR_MESSAGES.BAD_REQUEST });
+      return;
+    }
+
     try {
-      const chemicalCargoToUpdate =
-        await ChemicalCargoRepository.readById(+newStatusId);
+      const chemicalCargoToUpdate = await ChemicalCargoRepository.readById(+id);
 
       if (!chemicalCargoToUpdate) {
         response.status(404).json({ error: ERROR_MESSAGES.NOT_FOUND });
@@ -38,7 +38,7 @@ const updateChemicalCargoStatus = createHandler(
       }
 
       const newStatus =
-        await ChemicalCargoStatusRepository.readById(+newStatusId);
+        await ChemicalCargoStatusRepository.readById(status_id);
 
       if (!newStatus) {
         response.status(400).json({ error: ERROR_MESSAGES.BAD_REQUEST });

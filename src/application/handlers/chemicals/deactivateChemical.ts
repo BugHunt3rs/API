@@ -7,6 +7,7 @@ const deactivateChemical = createHandler(async ({ request, response }) => {
 
   if (!id || Array.isArray(id) || isNaN(+id) || !Number.isInteger(+id)) {
     response.status(400).json({ error: ERROR_MESSAGES.INVALID_ID });
+    response.status(400).json({ error: ERROR_MESSAGES.INVALID_ID });
     return;
   }
 
