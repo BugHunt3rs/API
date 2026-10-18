@@ -1,3 +1,4 @@
+import type { Request } from "express";
 import ERROR_MESSAGES from "@/utils/errorsMessages";
 import fileSystem from "node:fs";
 import { EOL } from "node:os";
@@ -14,6 +15,7 @@ const LOG_TYPE = {
 
 type LoggerArgs = {
   logType: keyof typeof LOG_TYPE;
+  requestObject: Request;
   newValue: Object | null;
   oldValue: Object | null;
   error?: keyof typeof ERROR_MESSAGES;
@@ -63,6 +65,7 @@ function appendToFile(
 
 export default function logger({
   logType,
+  requestObject,
   newValue,
   oldValue,
   error,
@@ -104,6 +107,6 @@ export default function logger({
       break;
   }
 
-  const newLogContent = `${logType} - new_value: ${newValue} | old_value: ${oldValue} | error: ${error} | info: ${info} | warning: ${warning}`;
+  const newLogContent = `${logType} (${requestObject.method} ${requestObject.originalUrl}) - new_value: ${newValue} | old_value: ${oldValue} | error: ${error} | info: ${info} | warning: ${warning}`;
   appendToFile(fileName, newLogContent);
 }
