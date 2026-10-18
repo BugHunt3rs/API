@@ -1,7 +1,9 @@
+import ChemicalCargoStatus from "@/domain/status/ChemicalCargoStatus";
 import ChemicalCargoRepository from "@/infrastructure/database/repositories/chemical_cargo/ChemicalCargoRepository";
+import ChemicalCargoStatusRepository from "@/infrastructure/database/repositories/chemical_cargo_status/ChemicalCargoStatusRepository";
+import canMoveChemicalCargo from "@/utils/canMoveChemicalCargo";
 import createHandler from "@/utils/createHandler";
 import ERROR_MESSAGES from "@/utils/errorsMessages";
-
 
 const releaseChemicalCargo = createHandler(async ({ request, response }) => {
   const { id } = request.params;
@@ -13,14 +15,55 @@ const releaseChemicalCargo = createHandler(async ({ request, response }) => {
 
   try {
     const chemicalCargoToRelease = await ChemicalCargoRepository.readById(+id);
+
     if (!chemicalCargoToRelease) {
       response.status(404).json({ error: ERROR_MESSAGES.NOT_FOUND });
       return;
     }
 
-    const releasedChemicalCargo = await ChemicalCargoRepository.update(
+    const { canMove, cannotMoveReasons } = await canMoveChemicalCargo(
+      chemicalCargoToRelease,
+    );
+
+    if (!canMove) {
+      response.status(403).json({
+        error: `${ERROR_MESSAGES.FORBIDDEN} - ${JSON.stringify(cannotMoveReasons)}`,
+      });
+    }
+
+    if (!chemicalCargoToRelease.required_documentation_id) {
+      response.status(403).json({ error: ERROR_MESSAGES.FORBIDDEN });
+      return;
+    }
+
+    const chemicalCargoStatus = await ChemicalCargoStatusRepository.readById(
+      chemicalCargoToRelease.status_id,
+    );
+
+    if (!chemicalCargoStatus) {
+      response.status(500).json({ error: ERROR_MESSAGES.UNEXPECTED_ERROR });
+      return;
+    }
+
+    if (chemicalCargoStatus.description === ChemicalCargoStatus.blocked) {
+      response.status(403).json({ error: ERROR_MESSAGES.FORBIDDEN });
+      return;
+    }
+
+    const releasedCargoStatusId = (
+      await ChemicalCargoStatusRepository.readAll()
+    ).find(
+      (cargoStatus) => cargoStatus.description === ChemicalCargoStatus.released,
+    )?.id;
+
+    if (!releasedCargoStatusId) {
+      response.status(500).json({ error: ERROR_MESSAGES.UNEXPECTED_ERROR });
+      return;
+    }
+
+    const releasedChemicalCargo = ChemicalCargoRepository.update(
       chemicalCargoToRelease.id,
-      { status_id: 4 }, // TODO - replace with status lookup (cargo_status: Released)
+      { status_id: releasedCargoStatusId },
     );
 
     response.status(200).json({ data: releasedChemicalCargo });

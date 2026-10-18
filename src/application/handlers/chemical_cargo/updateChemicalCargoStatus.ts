@@ -1,4 +1,6 @@
 import ChemicalCargoRepository from "@/infrastructure/database/repositories/chemical_cargo/ChemicalCargoRepository";
+import ChemicalCargoStatusRepository from "@/infrastructure/database/repositories/chemical_cargo_status/ChemicalCargoStatusRepository";
+import canMoveChemicalCargo from "@/utils/canMoveChemicalCargo";
 import createHandler from "@/utils/createHandler";
 import ERROR_MESSAGES from "@/utils/errorsMessages";
 
@@ -25,9 +27,27 @@ const updateChemicalCargoStatus = createHandler(
         return;
       }
 
+      const { canMove, cannotMoveReasons } = await canMoveChemicalCargo(
+        chemicalCargoToUpdate,
+      );
+
+      if (!canMove) {
+        response.status(403).json({
+          error: `${ERROR_MESSAGES.FORBIDDEN} - ${JSON.stringify(cannotMoveReasons)}`,
+        });
+      }
+
+      const newStatus =
+        await ChemicalCargoStatusRepository.readById(status_id);
+
+      if (!newStatus) {
+        response.status(400).json({ error: ERROR_MESSAGES.BAD_REQUEST });
+        return;
+      }
+
       const updatedChemicalCargo = await ChemicalCargoRepository.update(
         chemicalCargoToUpdate.id,
-        { status_id },
+        { status_id: newStatus.id },
       );
 
       response.status(200).json({ data: updatedChemicalCargo });

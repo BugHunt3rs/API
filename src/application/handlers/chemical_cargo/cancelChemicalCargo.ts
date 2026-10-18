@@ -1,7 +1,8 @@
+import ChemicalCargoStatus from "@/domain/status/ChemicalCargoStatus";
 import ChemicalCargoRepository from "@/infrastructure/database/repositories/chemical_cargo/ChemicalCargoRepository";
+import ChemicalCargoStatusRepository from "@/infrastructure/database/repositories/chemical_cargo_status/ChemicalCargoStatusRepository";
 import createHandler from "@/utils/createHandler";
 import ERROR_MESSAGES from "@/utils/errorsMessages";
-
 
 const cancelChemicalCargo = createHandler(async ({ request, response }) => {
   const { id } = request.params;
@@ -18,9 +19,20 @@ const cancelChemicalCargo = createHandler(async ({ request, response }) => {
       return;
     }
 
+    const canceledStatusId = (
+      await ChemicalCargoStatusRepository.readAll()
+    ).find(
+      (cargoStatus) => cargoStatus.description === ChemicalCargoStatus.canceled,
+    )?.id;
+
+    if (!canceledStatusId) {
+      response.status(500).json({ error: ERROR_MESSAGES.UNEXPECTED_ERROR });
+      return;
+    }
+
     const canceledChemicalCargo = await ChemicalCargoRepository.update(
       chemicalCargoToCancel.id,
-      { status_id: 8 }, // TODO - replace with status lookup (cargo_status: Canceled)
+      { status_id: canceledStatusId },
     );
 
     response.status(200).json({ data: canceledChemicalCargo });
