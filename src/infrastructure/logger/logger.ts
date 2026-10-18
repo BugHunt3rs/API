@@ -1,8 +1,8 @@
 import type { Request } from "express";
-import ERROR_MESSAGES from "@/utils/errorsMessages";
 import fileSystem from "node:fs";
 import { EOL } from "node:os";
 import path from "node:path";
+
 const LOG_TYPE = {
   INFO: "INFO",
   WARNING: "WARNING",
@@ -18,7 +18,7 @@ type LoggerArgs = {
   requestObject: Request;
   newValue?: Object | null;
   oldValue?: Object | null;
-  error?: keyof typeof ERROR_MESSAGES;
+  error?: string;
   info?: string;
   warning?: string;
 };
@@ -63,7 +63,7 @@ function appendToFile(
   }
 }
 
-export default function logger({
+function createLog({
   logType,
   requestObject,
   newValue = null,
@@ -110,3 +110,20 @@ export default function logger({
   const newLogContent = `${logType} (${requestObject.method} ${requestObject.originalUrl}) - new_value: ${newValue} | old_value: ${oldValue} | error: ${error} | info: ${info} | warning: ${warning}`;
   appendToFile(fileName, newLogContent);
 }
+
+const logger = {
+  create: (requestObject: Request, newValue: Object) =>
+    createLog({ logType: LOG_TYPE.CREATE, requestObject, newValue }),
+  update: (requestObject: Request, oldValue: Object, newValue: Object) =>
+    createLog({ logType: LOG_TYPE.CREATE, requestObject, newValue, oldValue }),
+  deletion: (requestObject: Request, oldValue: Object) =>
+    createLog({ logType: LOG_TYPE.DELETE, requestObject, oldValue }),
+  error: (requestObject: Request, errorMessage: string) =>
+    createLog({ logType: LOG_TYPE.ERROR, requestObject, error: errorMessage }),
+  info: (requestObject: Request, infoMessage: string) =>
+    createLog({ logType: LOG_TYPE.ERROR, requestObject, info: infoMessage }),
+  warn: (requestObject: Request, warnMessage: string) =>
+    createLog({ logType: LOG_TYPE.ERROR, requestObject, warning: warnMessage }),
+};
+
+export default logger;
