@@ -1,11 +1,8 @@
-import type { Request, Response } from "express";
-import ChemicalRepository from "../../../infrastructure/database/repositories/chemical/ChemicalRepository";
+import ChemicalRepository from "@/infrastructure/database/repositories/chemical/ChemicalRepository";
+import createHandler from "@/utils/createHandler";
 import ERROR_MESSAGES from "@/utils/errorsMessages";
 
-export default async function deleteChemical(
-  request: Request,
-  response: Response,
-) {
+const deleteChemical = createHandler(async ({ request, response }) => {
   const { id } = request.params;
 
   if (!id || Array.isArray(id) || isNaN(+id) || !Number.isInteger(+id)) {
@@ -28,4 +25,6 @@ export default async function deleteChemical(
     console.error(error);
     response.status(500).json({ error: ERROR_MESSAGES.UNEXPECTED_ERROR });
   }
-}
+});
+
+export default deleteChemical;

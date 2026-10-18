@@ -1,18 +1,24 @@
-import type { Request, Response } from "express";
-import ChemicalRepository from "../../../infrastructure/database/repositories/chemical/ChemicalRepository";
+import ChemicalRepository from "@/infrastructure/database/repositories/chemical/ChemicalRepository";
+import createHandler from "@/utils/createHandler";
 import ERROR_MESSAGES from "@/utils/errorsMessages";
-export default async function deactivateChemical(
-  request: Request,
-  response: Response,
-) {
+
+const deactivateChemical = createHandler(async ({ request, response }) => {
   const { id } = request.params;
 
   if (!id || Array.isArray(id) || isNaN(+id) || !Number.isInteger(+id)) {
+    response.status(400).json({ error: ERROR_MESSAGES.INVALID_ID });
     response.status(400).json({ error: ERROR_MESSAGES.INVALID_ID });
     return;
   }
 
   try {
+    const chemicalToDeactivate = await ChemicalRepository.readById(+id);
+
+    if (!chemicalToDeactivate) {
+      response.status(404).json({ error: ERROR_MESSAGES.NOT_FOUND });
+      return;
+    }
+
     const deactivatedChemical = await ChemicalRepository.update(+id, {
       status: false,
       update_date: new Date(),
@@ -23,4 +29,6 @@ export default async function deactivateChemical(
     console.error(error);
     response.status(500).json({ error: ERROR_MESSAGES.UNEXPECTED_ERROR });
   }
-}
+});
+
+export default deactivateChemical;

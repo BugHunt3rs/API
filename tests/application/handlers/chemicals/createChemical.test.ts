@@ -1,7 +1,7 @@
 import createChemical from "@/application/handlers/chemicals/createChemical";
 import ChemicalRepository from "@/infrastructure/database/repositories/chemical/ChemicalRepository";
 import ERROR_MESSAGES from "@/utils/errorsMessages";
-import { mockNext, mockRequest, mockResponse } from "../../../helpers/mockHttp";
+import { mockRequest, mockResponse } from "../../../helpers/mockHttp";
 
 jest.mock(
   "@/infrastructure/database/repositories/chemical/ChemicalRepository",
@@ -26,7 +26,7 @@ describe("createChemical", () => {
     jest.mocked(ChemicalRepository.create).mockResolvedValue(created as never);
     const response = mockResponse();
 
-    await createChemical(mockRequest(validChemical), response, mockNext());
+    await createChemical(mockRequest(validChemical), response);
 
     expect(ChemicalRepository.create).toHaveBeenCalledWith(validChemical);
     expect(response.status).toHaveBeenCalledWith(201);
@@ -37,7 +37,7 @@ describe("createChemical", () => {
     const { name: _name, ...withoutName } = validChemical;
     const response = mockResponse();
 
-    await createChemical(mockRequest(withoutName), response, mockNext());
+    await createChemical(mockRequest(withoutName), response);
 
     expect(ChemicalRepository.create).not.toHaveBeenCalled();
     expect(response.status).toHaveBeenCalledWith(400);
@@ -52,7 +52,6 @@ describe("createChemical", () => {
     await createChemical(
       mockRequest({ ...validChemical, name: "   " }),
       response,
-      mockNext(),
     );
 
     expect(ChemicalRepository.create).not.toHaveBeenCalled();
@@ -63,7 +62,7 @@ describe("createChemical", () => {
     const { risk_class_id: _riskClass, ...withoutRiskClass } = validChemical;
     const response = mockResponse();
 
-    await createChemical(mockRequest(withoutRiskClass), response, mockNext());
+    await createChemical(mockRequest(withoutRiskClass), response);
 
     expect(ChemicalRepository.create).not.toHaveBeenCalled();
     expect(response.status).toHaveBeenCalledWith(400);
