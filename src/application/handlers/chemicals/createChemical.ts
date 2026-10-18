@@ -31,4 +31,4 @@ const createChememical = createHandler(async ({ request, response }) => {
   }
 });
 
-export default createChememical;
+export default createChemical;

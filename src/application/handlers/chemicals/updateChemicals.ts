@@ -4,14 +4,29 @@ import ChemicalRepository from "../../../infrastructure/database/repositories/ch
 import createLog from "@/infrastructure/logger/logger";
 import logger from "@/infrastructure/logger/logger";
 import ERROR_MESSAGES from "@/utils/errorsMessages";
+import type { NewChemical } from "@/domain/entities/Chemical";
+import ChemicalRepository from "@/infrastructure/database/repositories/chemical/ChemicalRepository";
+import createHandler from "@/utils/createHandler";
+import ERROR_MESSAGES from "@/utils/errorsMessages";
 
-export default async function updateChemical(
-  request: Request,
-  response: Response,
-  next: NextFunction,
-) {
+const updateChemical = createHandler(async ({ request, response }) => {
+  const { id } = request.params;
+
+  if (!id || Array.isArray(id) || isNaN(+id) || !Number.isInteger(+id)) {
+    response.status(400).json({ error: ERROR_MESSAGES.INVALID_ID });
+    return;
+  }
+
+  const {
+    name,
+    description,
+    UN_number,
+    risk_class_id,
+    status,
+  }: Partial<NewChemical> = request.body;
+
   try {
-    const { id } = request.params;
+    const chemicalToUpdate = await ChemicalRepository.readById(+id);
 
     if (!id || isNaN(+id)) {
       logger.error(request, ERROR_MESSAGES.BAD_REQUEST);
@@ -27,6 +42,10 @@ export default async function updateChemical(
       risk_class_id,
       status,
     }: Partial<NewChemical> = request.body;
+    if (!chemicalToUpdate) {
+      response.status(404).json({ error: ERROR_MESSAGES.NOT_FOUND });
+      return;
+    }
 
     const updatedChemical = await ChemicalRepository.update(+id, {
       name,
@@ -40,5 +59,9 @@ export default async function updateChemical(
   } catch (error) {
     logger.error(request, error as string);
     next(error);
+    console.error(error);
+    response.status(500).json({ error: ERROR_MESSAGES.UNEXPECTED_ERROR });
   }
-}
+});
+
+export default updateChemical;
