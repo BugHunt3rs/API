@@ -1,7 +1,9 @@
 import type { NextFunction, Request, Response } from "express";
 import type { NewChemical } from "../../../domain/entities/Chemical";
 import ChemicalRepository from "../../../infrastructure/database/repositories/chemical/ChemicalRepository";
+import createLog from "@/infrastructure/logger/logger";
 import logger from "@/infrastructure/logger/logger";
+import ERROR_MESSAGES from "@/utils/errorsMessages";
 
 export default async function updateChemical(
   request: Request,
@@ -12,10 +14,12 @@ export default async function updateChemical(
     const { id } = request.params;
 
     if (!id || isNaN(+id)) {
+      logger.error(request, ERROR_MESSAGES.BAD_REQUEST);
       response.status(500).json({ error: "Invalid ID" });
       return;
     }
     // TODO: Check if target chemical exists before attempting to update it
+    // TODO: add logger after deactivating chemical
     const {
       name,
       description,
@@ -32,10 +36,9 @@ export default async function updateChemical(
       status,
     });
 
-    logger({ logType: "UPDATE", newValue: updatedChemical, oldValue: null });
     response.status(200).json({ data: updatedChemical });
   } catch (error) {
-    console.error(error);
+    logger.error(request, error as string);
     next(error);
   }
 }

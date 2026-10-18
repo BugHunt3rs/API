@@ -11,7 +11,6 @@ export default async function readChemicals(
 
     response.status(200).json({ data: chemicals });
   } catch (error) {
-    console.error(error);
     next(error);
   }
 }

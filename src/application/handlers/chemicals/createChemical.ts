@@ -16,28 +16,17 @@ const createChememical = createHandler(async ({ request, response }) => {
       "status",
     ])
   ) {
+    logger.error(request, ERROR_MESSAGES.BAD_REQUEST);
     response.status(400).json({ error: ERROR_MESSAGES.BAD_REQUEST });
-    logger({
-      requestObject: request,
-      logType: "ERROR",
-    });
     return;
   }
 
   try {
     const newChemical = await ChemicalRepository.create(body);
-    logger({
-      requestObject: request,
-      logType: "CREATE",
-      newValue: newChemical,
-    });
+    logger.create(request, newChemical);
     response.status(201).json({ data: newChemical });
   } catch (error) {
-    console.error(error);
-    logger({
-      requestObject: request,
-      logType: "ERROR",
-    });
+    logger.error(request, error as string);
     response.status(500).json({ error: ERROR_MESSAGES.UNEXPECTED_ERROR });
   }
 });
