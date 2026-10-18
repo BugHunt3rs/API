@@ -1,13 +1,8 @@
-import type { NextFunction, Request, Response } from "express";
 import type { NewChemical } from "../../../domain/entities/Chemical";
 import ChemicalRepository from "../../../infrastructure/database/repositories/chemical/ChemicalRepository";
-import createLog from "@/infrastructure/logger/logger";
 import logger from "@/infrastructure/logger/logger";
 import ERROR_MESSAGES from "@/utils/errorsMessages";
-import type { NewChemical } from "@/domain/entities/Chemical";
-import ChemicalRepository from "@/infrastructure/database/repositories/chemical/ChemicalRepository";
 import createHandler from "@/utils/createHandler";
-import ERROR_MESSAGES from "@/utils/errorsMessages";
 
 const updateChemical = createHandler(async ({ request, response }) => {
   const { id } = request.params;
@@ -16,14 +11,6 @@ const updateChemical = createHandler(async ({ request, response }) => {
     response.status(400).json({ error: ERROR_MESSAGES.INVALID_ID });
     return;
   }
-
-  const {
-    name,
-    description,
-    UN_number,
-    risk_class_id,
-    status,
-  }: Partial<NewChemical> = request.body;
 
   try {
     const chemicalToUpdate = await ChemicalRepository.readById(+id);
