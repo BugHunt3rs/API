@@ -16,8 +16,8 @@ const LOG_TYPE = {
 type LoggerArgs = {
   logType: keyof typeof LOG_TYPE;
   requestObject: Request;
-  newValue: Object | null;
-  oldValue: Object | null;
+  newValue?: Object | null;
+  oldValue?: Object | null;
   error?: keyof typeof ERROR_MESSAGES;
   info?: string;
   warning?: string;
@@ -66,8 +66,8 @@ function appendToFile(
 export default function logger({
   logType,
   requestObject,
-  newValue,
-  oldValue,
+  newValue = null,
+  oldValue = null,
   error,
   info,
   warning,
