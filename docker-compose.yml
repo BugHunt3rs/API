@@ -8,6 +8,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - ./src/infrastructure/database/migrations:/docker-entrypoint-initdb.d
     restart: always
+    command: ["postgres", "-c", "timezone=America/Sao_Paulo"]
     ports:
       - 5432:5432
     environment:

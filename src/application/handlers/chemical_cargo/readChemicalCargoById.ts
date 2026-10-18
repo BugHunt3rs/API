@@ -2,7 +2,6 @@ import ChemicalCargoRepository from "@/infrastructure/database/repositories/chem
 import createHandler from "@/utils/createHandler";
 import ERROR_MESSAGES from "@/utils/errorsMessages";
 
-
 const readChemicalCargoById = createHandler(async ({ request, response }) => {
   const { id } = request.params;
 
