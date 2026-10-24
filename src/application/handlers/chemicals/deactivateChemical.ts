@@ -1,12 +1,13 @@
 import ChemicalRepository from "@/infrastructure/database/repositories/chemical/ChemicalRepository";
 import createHandler from "@/utils/createHandler";
 import ERROR_MESSAGES from "@/utils/errorsMessages";
+import logger from "@/infrastructure/logger/logger";
 
 const deactivateChemical = createHandler(async ({ request, response }) => {
   const { id } = request.params;
 
   if (!id || Array.isArray(id) || isNaN(+id) || !Number.isInteger(+id)) {
-    response.status(400).json({ error: ERROR_MESSAGES.INVALID_ID });
+    logger.error(request, ERROR_MESSAGES.INVALID_ID);
     response.status(400).json({ error: ERROR_MESSAGES.INVALID_ID });
     return;
   }
@@ -23,10 +24,10 @@ const deactivateChemical = createHandler(async ({ request, response }) => {
       status: false,
       update_date: new Date(),
     });
-
+    logger.update(request, chemicalToDeactivate, deactivatedChemical);
     response.status(200).json({ data: deactivatedChemical });
   } catch (error) {
-    console.error(error);
+    logger.error(request, error as string);
     response.status(500).json({ error: ERROR_MESSAGES.UNEXPECTED_ERROR });
   }
 });
