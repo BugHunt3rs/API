@@ -1,6 +1,5 @@
 import {
   canMoveChemicalCargo,
-  canTransition,
 } from "@/domain/rules/chemical_cargo/cargoStatusRules";
 import ChemicalCargoStatus from "@/domain/status/ChemicalCargoStatus";
 
@@ -15,7 +14,7 @@ const {
   canceled,
 } = ChemicalCargoStatus;
 
-describe("canTransition", () => {
+describe("canMoveChemicalCargo transitions", () => {
   it.each([
     [registered, underAnalyses],
     [underAnalyses, underInspection],
@@ -29,7 +28,7 @@ describe("canTransition", () => {
     [blocked, canceled],
     [underInspection, blocked],
   ])("allows %s -> %s", (from, to) => {
-    expect(canTransition(from, to)).toBe(true);
+    expect(canMoveChemicalCargo(from, to).canMove).toBe(true);
   });
 
   it.each([
@@ -40,18 +39,18 @@ describe("canTransition", () => {
     [underInspection, done],
     [released, registered],
   ])("forbids %s -> %s", (from, to) => {
-    expect(canTransition(from, to)).toBe(false);
+    expect(canMoveChemicalCargo(from, to).canMove).toBe(false);
   });
 
   it.each([done, canceled])("never leaves the terminal state %s", (from) => {
     for (const to of Object.values(ChemicalCargoStatus)) {
-      expect(canTransition(from, to)).toBe(false);
+      expect(canMoveChemicalCargo(from, to).canMove).toBe(false);
     }
   });
 
   it("forbids an unknown status", () => {
-    expect(canTransition("Unknown", registered)).toBe(false);
-    expect(canTransition(registered, "Unknown")).toBe(false);
+    expect(canMoveChemicalCargo("Unknown", registered).canMove).toBe(false);
+    expect(canMoveChemicalCargo(registered, "Unknown").canMove).toBe(false);
   });
 });
 

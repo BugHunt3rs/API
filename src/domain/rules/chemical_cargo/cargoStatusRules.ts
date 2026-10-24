@@ -47,7 +47,3 @@ export function canMoveChemicalCargo(from: string, to: string) {
 
   return { canMove: false, cannotMoveReasons };
 }
-
-export function canTransition(from: string, to: string) {
-  return canMoveChemicalCargo(from, to).canMove;
-}
