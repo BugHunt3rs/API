@@ -1,6 +1,6 @@
+import { canMoveChemicalCargo } from "@/domain/rules/chemical_cargo/cargoStatusRules";
 import ChemicalCargoRepository from "@/infrastructure/database/repositories/chemical_cargo/ChemicalCargoRepository";
 import ChemicalCargoStatusRepository from "@/infrastructure/database/repositories/chemical_cargo_status/ChemicalCargoStatusRepository";
-import canMoveChemicalCargo from "@/utils/canMoveChemicalCargo";
 import createHandler from "@/utils/createHandler";
 import ERROR_MESSAGES from "@/utils/errorsMessages";
 
@@ -27,21 +27,32 @@ const updateChemicalCargoStatus = createHandler(
         return;
       }
 
-      const { canMove, cannotMoveReasons } = await canMoveChemicalCargo(
-        chemicalCargoToUpdate,
-      );
-
-      if (!canMove) {
-        response.status(403).json({
-          error: `${ERROR_MESSAGES.FORBIDDEN} - ${JSON.stringify(cannotMoveReasons)}`,
-        });
-      }
-
       const newStatus =
         await ChemicalCargoStatusRepository.readById(status_id);
 
       if (!newStatus) {
         response.status(400).json({ error: ERROR_MESSAGES.BAD_REQUEST });
+        return;
+      }
+
+      const currentStatus = await ChemicalCargoStatusRepository.readById(
+        chemicalCargoToUpdate.status_id,
+      );
+
+      if (!currentStatus) {
+        response.status(500).json({ error: ERROR_MESSAGES.UNEXPECTED_ERROR });
+        return;
+      }
+
+      const { canMove, cannotMoveReasons } = canMoveChemicalCargo(
+        currentStatus.description,
+        newStatus.description,
+      );
+
+      if (!canMove) {
+        response.status(409).json({
+          error: `${ERROR_MESSAGES.INVALID_STATUS_TRANSITION} - ${JSON.stringify(cannotMoveReasons)}`,
+        });
         return;
       }
 
