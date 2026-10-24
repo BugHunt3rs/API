@@ -1,4 +1,4 @@
-import { canTransition } from "@/domain/rules/cargoStatusRules";
+import { canTransition } from "@/domain/rules/chemical_cargo/cargoStatusRules";
 import ChemicalCargoStatus from "@/domain/status/ChemicalCargoStatus";
 
 const {
