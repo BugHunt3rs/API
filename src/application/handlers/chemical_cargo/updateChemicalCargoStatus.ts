@@ -1,3 +1,4 @@
+import { canTransition } from "@/domain/rules/cargoStatusRules";
 import ChemicalCargoStatus from "@/domain/status/ChemicalCargoStatus";
 import ChemicalCargoRepository from "@/infrastructure/database/repositories/chemical_cargo/ChemicalCargoRepository";
 import ChemicalCargoStatusRepository from "@/infrastructure/database/repositories/chemical_cargo_status/ChemicalCargoStatusRepository";
@@ -36,6 +37,15 @@ const updateChemicalCargoStatus = createHandler(
         return;
       }
 
+      const currentStatus = await ChemicalCargoStatusRepository.readById(
+        chemicalCargoToUpdate.status_id,
+      );
+
+      if (!currentStatus) {
+        response.status(500).json({ error: ERROR_MESSAGES.UNEXPECTED_ERROR });
+        return;
+      }
+
       if (newStatus.description === ChemicalCargoStatus.moving) {
         const { canMove, cannotMoveReasons } = await canMoveChemicalCargo(
           chemicalCargoToUpdate,
@@ -47,6 +57,13 @@ const updateChemicalCargoStatus = createHandler(
           });
           return;
         }
+      }
+
+      if (!canTransition(currentStatus.description, newStatus.description)) {
+        response
+          .status(409)
+          .json({ error: ERROR_MESSAGES.INVALID_STATUS_TRANSITION });
+        return;
       }
 
       const updatedChemicalCargo = await ChemicalCargoRepository.update(
