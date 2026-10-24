@@ -4,6 +4,7 @@ import ChemicalCargoStatusRepository from "@/infrastructure/database/repositorie
 
 const CANNOT_MOVE_REASON = {
   STATUS_BLOCKED: "Cargo status is blocked",
+  STATUS_CANCELED: "Cargo status is canceled",
   STATUS_NOT_FOUND: "Cargo status not found",
 };
 
@@ -20,9 +21,14 @@ export default async function canMoveChemicalCargo(cargo: ChemicalCargo) {
     cannotMoveReasons.push(CANNOT_MOVE_REASON.STATUS_NOT_FOUND);
   }
 
-  if (cargoStatus?.description === ChemicalCargoStatus.canceled) {
+  if (cargoStatus?.description === ChemicalCargoStatus.blocked) {
     canMove = false;
     cannotMoveReasons.push(CANNOT_MOVE_REASON.STATUS_BLOCKED);
+  }
+
+  if (cargoStatus?.description === ChemicalCargoStatus.canceled) {
+    canMove = false;
+    cannotMoveReasons.push(CANNOT_MOVE_REASON.STATUS_CANCELED);
   }
 
   return { canMove, cannotMoveReasons };
