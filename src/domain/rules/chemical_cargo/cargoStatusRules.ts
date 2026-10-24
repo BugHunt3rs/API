@@ -1,6 +1,6 @@
 import ChemicalCargoStatus from "@/domain/status/ChemicalCargoStatus";
 
-const ALLOWED_TRANSITIONS: Record<string, string[]> = {
+const ALLOWED_CHEMICAL_CARGO_MOVEMENTS: Record<string, string[]> = {
   [ChemicalCargoStatus.registered]: [
     ChemicalCargoStatus.underAnalyses,
     ChemicalCargoStatus.canceled,
