@@ -24,7 +24,7 @@ const ALLOWED_CHEMICAL_CARGO_MOVEMENTS: Record<string, string[]> = {
   [ChemicalCargoStatus.canceled]: [],
 };
 
-export function canTransition(from: string, to: string) {
+export function canMoveChemicalCargo(from: typeof ChemicalCargoStatus, to: typeof ChemicalCargoStatus) {
   return ALLOWED_TRANSITIONS[from]?.includes(to) ?? false;
 }
 
