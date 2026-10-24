@@ -56,27 +56,31 @@ describe("canTransition", () => {
 });
 
 describe("canMoveChemicalCargo", () => {
-  it.each([registered, underAnalyses, underInspection, released, moving])(
-    "allows moving a cargo with status %s",
-    (status) => {
-      expect(canMoveChemicalCargo(status)).toEqual({
-        canMove: true,
-        cannotMoveReasons: [],
-      });
-    },
-  );
+  it("allows a valid transition without reasons", () => {
+    expect(canMoveChemicalCargo(released, moving)).toEqual({
+      canMove: true,
+      cannotMoveReasons: [],
+    });
+  });
 
-  it("rejects a blocked cargo with its own reason", () => {
-    expect(canMoveChemicalCargo(blocked)).toEqual({
+  it("rejects moving a blocked cargo with its own reason", () => {
+    expect(canMoveChemicalCargo(blocked, moving)).toEqual({
       canMove: false,
       cannotMoveReasons: ["Cargo status is blocked"],
     });
   });
 
-  it("rejects a canceled cargo with its own reason", () => {
-    expect(canMoveChemicalCargo(canceled)).toEqual({
+  it("rejects moving a canceled cargo with its own reason", () => {
+    expect(canMoveChemicalCargo(canceled, released)).toEqual({
       canMove: false,
       cannotMoveReasons: ["Cargo status is canceled"],
+    });
+  });
+
+  it("rejects a transition outside the allowed list with a generic reason", () => {
+    expect(canMoveChemicalCargo(registered, done)).toEqual({
+      canMove: false,
+      cannotMoveReasons: ["Status transition not allowed"],
     });
   });
 });

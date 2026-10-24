@@ -1,8 +1,4 @@
-import {
-  canMoveChemicalCargo,
-  canTransition,
-} from "@/domain/rules/chemical_cargo/cargoStatusRules";
-import ChemicalCargoStatus from "@/domain/status/ChemicalCargoStatus";
+import { canMoveChemicalCargo } from "@/domain/rules/chemical_cargo/cargoStatusRules";
 import ChemicalCargoRepository from "@/infrastructure/database/repositories/chemical_cargo/ChemicalCargoRepository";
 import ChemicalCargoStatusRepository from "@/infrastructure/database/repositories/chemical_cargo_status/ChemicalCargoStatusRepository";
 import createHandler from "@/utils/createHandler";
@@ -48,23 +44,15 @@ const updateChemicalCargoStatus = createHandler(
         return;
       }
 
-      if (newStatus.description === ChemicalCargoStatus.moving) {
-        const { canMove, cannotMoveReasons } = canMoveChemicalCargo(
-          currentStatus.description,
-        );
+      const { canMove, cannotMoveReasons } = canMoveChemicalCargo(
+        currentStatus.description,
+        newStatus.description,
+      );
 
-        if (!canMove) {
-          response.status(403).json({
-            error: `${ERROR_MESSAGES.FORBIDDEN} - ${JSON.stringify(cannotMoveReasons)}`,
-          });
-          return;
-        }
-      }
-
-      if (!canTransition(currentStatus.description, newStatus.description)) {
-        response
-          .status(409)
-          .json({ error: ERROR_MESSAGES.INVALID_STATUS_TRANSITION });
+      if (!canMove) {
+        response.status(409).json({
+          error: `${ERROR_MESSAGES.INVALID_STATUS_TRANSITION} - ${JSON.stringify(cannotMoveReasons)}`,
+        });
         return;
       }
 
