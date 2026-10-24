@@ -35,6 +35,7 @@ const updateChemicalCargoStatus = createHandler(
         response.status(403).json({
           error: `${ERROR_MESSAGES.FORBIDDEN} - ${JSON.stringify(cannotMoveReasons)}`,
         });
+        return;
       }
 
       const newStatus =
