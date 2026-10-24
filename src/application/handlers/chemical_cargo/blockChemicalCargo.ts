@@ -1,3 +1,4 @@
+import { canTransition } from "@/domain/rules/cargoStatusRules";
 import ChemicalCargoStatus from "@/domain/status/ChemicalCargoStatus";
 import ChemicalCargoRepository from "@/infrastructure/database/repositories/chemical_cargo/ChemicalCargoRepository";
 import ChemicalCargoStatusRepository from "@/infrastructure/database/repositories/chemical_cargo_status/ChemicalCargoStatusRepository";
@@ -16,6 +17,22 @@ const blockChemicalCargo = createHandler(async ({ request, response }) => {
     const chemicalCargoToBlock = await ChemicalCargoRepository.readById(+id);
     if (!chemicalCargoToBlock) {
       response.status(404).json({ error: ERROR_MESSAGES.NOT_FOUND });
+      return;
+    }
+
+    const currentStatus = await ChemicalCargoStatusRepository.readById(
+      chemicalCargoToBlock.status_id,
+    );
+
+    if (!currentStatus) {
+      response.status(500).json({ error: ERROR_MESSAGES.UNEXPECTED_ERROR });
+      return;
+    }
+
+    if (!canTransition(currentStatus.description, ChemicalCargoStatus.blocked)) {
+      response
+        .status(409)
+        .json({ error: ERROR_MESSAGES.INVALID_STATUS_TRANSITION });
       return;
     }
 
