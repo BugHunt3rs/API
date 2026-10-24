@@ -1,4 +1,4 @@
-import { canTransition } from "@/domain/rules/chemical_cargo/cargoStatusRules";
+import { canMoveChemicalCargo } from "@/domain/rules/chemical_cargo/cargoStatusRules";
 import ChemicalCargoStatus from "@/domain/status/ChemicalCargoStatus";
 import ChemicalCargoRepository from "@/infrastructure/database/repositories/chemical_cargo/ChemicalCargoRepository";
 import ChemicalCargoStatusRepository from "@/infrastructure/database/repositories/chemical_cargo_status/ChemicalCargoStatusRepository";
@@ -35,15 +35,15 @@ const releaseChemicalCargo = createHandler(async ({ request, response }) => {
       return;
     }
 
-    if (
-      !canTransition(
-        chemicalCargoStatus.description,
-        ChemicalCargoStatus.released,
-      )
-    ) {
-      response
-        .status(409)
-        .json({ error: ERROR_MESSAGES.INVALID_STATUS_TRANSITION });
+    const { canMove, cannotMoveReasons } = canMoveChemicalCargo(
+      chemicalCargoStatus.description,
+      ChemicalCargoStatus.released,
+    );
+
+    if (!canMove) {
+      response.status(409).json({
+        error: `${ERROR_MESSAGES.INVALID_STATUS_TRANSITION} - ${JSON.stringify(cannotMoveReasons)}`,
+      });
       return;
     }
 
