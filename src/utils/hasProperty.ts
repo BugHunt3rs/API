@@ -4,6 +4,9 @@ export default function hasProperties<
 >(obj: T, expectedProperties: K[]) {
   let hasAllExpectedProperties = true;
 
+  if (!obj) {
+    hasAllExpectedProperties = false;
+  }
   for (const property of expectedProperties) {
     if (!hasAllExpectedProperties) continue;
 

@@ -1,0 +1,26 @@
+info:
+  name: create_chemical
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{baseUrl}}/chemical"
+  body:
+    type: json
+    data: |-
+      {
+        "name": "TEST",
+        "description": "TEST DESCRIPTION TEST",
+        "UN_number": "test",
+        "risk_class_id": 1,
+        "status": true
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
