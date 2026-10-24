@@ -1,8 +1,10 @@
-import { canTransition } from "@/domain/rules/chemical_cargo/cargoStatusRules";
+import {
+  canMoveChemicalCargo,
+  canTransition,
+} from "@/domain/rules/chemical_cargo/cargoStatusRules";
 import ChemicalCargoStatus from "@/domain/status/ChemicalCargoStatus";
 import ChemicalCargoRepository from "@/infrastructure/database/repositories/chemical_cargo/ChemicalCargoRepository";
 import ChemicalCargoStatusRepository from "@/infrastructure/database/repositories/chemical_cargo_status/ChemicalCargoStatusRepository";
-import canMoveChemicalCargo from "@/utils/canMoveChemicalCargo";
 import createHandler from "@/utils/createHandler";
 import ERROR_MESSAGES from "@/utils/errorsMessages";
 
@@ -47,8 +49,8 @@ const updateChemicalCargoStatus = createHandler(
       }
 
       if (newStatus.description === ChemicalCargoStatus.moving) {
-        const { canMove, cannotMoveReasons } = await canMoveChemicalCargo(
-          chemicalCargoToUpdate,
+        const { canMove, cannotMoveReasons } = canMoveChemicalCargo(
+          currentStatus.description,
         );
 
         if (!canMove) {
