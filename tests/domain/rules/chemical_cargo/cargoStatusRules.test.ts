@@ -1,4 +1,7 @@
-import { canTransition } from "@/domain/rules/chemical_cargo/cargoStatusRules";
+import {
+  canMoveChemicalCargo,
+  canTransition,
+} from "@/domain/rules/chemical_cargo/cargoStatusRules";
 import ChemicalCargoStatus from "@/domain/status/ChemicalCargoStatus";
 
 const {
@@ -49,5 +52,31 @@ describe("canTransition", () => {
   it("forbids an unknown status", () => {
     expect(canTransition("Unknown", registered)).toBe(false);
     expect(canTransition(registered, "Unknown")).toBe(false);
+  });
+});
+
+describe("canMoveChemicalCargo", () => {
+  it.each([registered, underAnalyses, underInspection, released, moving])(
+    "allows moving a cargo with status %s",
+    (status) => {
+      expect(canMoveChemicalCargo(status)).toEqual({
+        canMove: true,
+        cannotMoveReasons: [],
+      });
+    },
+  );
+
+  it("rejects a blocked cargo with its own reason", () => {
+    expect(canMoveChemicalCargo(blocked)).toEqual({
+      canMove: false,
+      cannotMoveReasons: ["Cargo status is blocked"],
+    });
+  });
+
+  it("rejects a canceled cargo with its own reason", () => {
+    expect(canMoveChemicalCargo(canceled)).toEqual({
+      canMove: false,
+      cannotMoveReasons: ["Cargo status is canceled"],
+    });
   });
 });
