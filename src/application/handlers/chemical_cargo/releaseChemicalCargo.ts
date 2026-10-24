@@ -29,6 +29,7 @@ const releaseChemicalCargo = createHandler(async ({ request, response }) => {
       response.status(403).json({
         error: `${ERROR_MESSAGES.FORBIDDEN} - ${JSON.stringify(cannotMoveReasons)}`,
       });
+      return;
     }
 
     if (!chemicalCargoToRelease.required_documentation_id) {
