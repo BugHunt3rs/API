@@ -27,3 +27,22 @@ const ALLOWED_TRANSITIONS: Record<string, string[]> = {
 export function canTransition(from: string, to: string) {
   return ALLOWED_TRANSITIONS[from]?.includes(to) ?? false;
 }
+
+const CANNOT_MOVE_REASON = {
+  STATUS_BLOCKED: "Cargo status is blocked",
+  STATUS_CANCELED: "Cargo status is canceled",
+};
+
+export function canMoveChemicalCargo(currentStatus: string) {
+  const cannotMoveReasons: string[] = [];
+
+  if (currentStatus === ChemicalCargoStatus.blocked) {
+    cannotMoveReasons.push(CANNOT_MOVE_REASON.STATUS_BLOCKED);
+  }
+
+  if (currentStatus === ChemicalCargoStatus.canceled) {
+    cannotMoveReasons.push(CANNOT_MOVE_REASON.STATUS_CANCELED);
+  }
+
+  return { canMove: cannotMoveReasons.length === 0, cannotMoveReasons };
+}
