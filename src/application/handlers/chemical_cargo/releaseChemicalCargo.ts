@@ -62,7 +62,7 @@ const releaseChemicalCargo = createHandler(async ({ request, response }) => {
       return;
     }
 
-    const releasedChemicalCargo = ChemicalCargoRepository.update(
+    const releasedChemicalCargo = await ChemicalCargoRepository.update(
       chemicalCargoToRelease.id,
       { status_id: releasedCargoStatusId },
     );
