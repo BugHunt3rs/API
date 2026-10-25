@@ -39,9 +39,15 @@ const updateChemicalCargoStatus = createHandler(
         ? getStatusKey(newStatus.description)
         : undefined;
 
-      if (!newStatus || !newStatusKey) {
+      if (!newStatus) {
         logger.error(request, ERROR_MESSAGES.BAD_REQUEST);
         response.status(400).json({ error: ERROR_MESSAGES.BAD_REQUEST });
+        return;
+      }
+
+      if (!newStatusKey) {
+        logger.error(request, ERROR_MESSAGES.INVALID_STATUS_KEY);
+        response.status(400).json({ error: ERROR_MESSAGES.INVALID_STATUS_KEY });
         return;
       }
 
@@ -54,8 +60,8 @@ const updateChemicalCargoStatus = createHandler(
         : undefined;
 
       if (!currentStatusKey) {
-        logger.error(request, ERROR_MESSAGES.UNEXPECTED_ERROR);
-        response.status(500).json({ error: ERROR_MESSAGES.UNEXPECTED_ERROR });
+        logger.error(request, ERROR_MESSAGES.INVALID_STATUS_KEY);
+        response.status(500).json({ error: ERROR_MESSAGES.INVALID_STATUS_KEY });
         return;
       }
 

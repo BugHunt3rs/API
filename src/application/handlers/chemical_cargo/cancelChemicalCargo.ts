@@ -33,8 +33,8 @@ const cancelChemicalCargo = createHandler(async ({ request, response }) => {
       : undefined;
 
     if (!currentStatusKey) {
-      logger.error(request, ERROR_MESSAGES.UNEXPECTED_ERROR);
-      response.status(500).json({ error: ERROR_MESSAGES.UNEXPECTED_ERROR });
+      logger.error(request, ERROR_MESSAGES.INVALID_STATUS_KEY);
+      response.status(500).json({ error: ERROR_MESSAGES.INVALID_STATUS_KEY });
       return;
     }
 
