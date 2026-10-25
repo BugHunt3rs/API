@@ -1,4 +1,5 @@
 import { canMoveChemicalCargo } from "@/domain/rules/chemical_cargo/cargoStatusRules";
+import { getStatusKey } from "@/domain/status/ChemicalCargoStatus";
 import ChemicalCargoRepository from "@/infrastructure/database/repositories/chemical_cargo/ChemicalCargoRepository";
 import ChemicalCargoStatusRepository from "@/infrastructure/database/repositories/chemical_cargo_status/ChemicalCargoStatusRepository";
 import createHandler from "@/utils/createHandler";
@@ -30,7 +31,11 @@ const updateChemicalCargoStatus = createHandler(
       const newStatus =
         await ChemicalCargoStatusRepository.readById(status_id);
 
-      if (!newStatus) {
+      const newStatusKey = newStatus
+        ? getStatusKey(newStatus.description)
+        : undefined;
+
+      if (!newStatus || !newStatusKey) {
         response.status(400).json({ error: ERROR_MESSAGES.BAD_REQUEST });
         return;
       }
@@ -39,14 +44,18 @@ const updateChemicalCargoStatus = createHandler(
         chemicalCargoToUpdate.status_id,
       );
 
-      if (!currentStatus) {
+      const currentStatusKey = currentStatus
+        ? getStatusKey(currentStatus.description)
+        : undefined;
+
+      if (!currentStatusKey) {
         response.status(500).json({ error: ERROR_MESSAGES.UNEXPECTED_ERROR });
         return;
       }
 
       const { canMove, cannotMoveReasons } = canMoveChemicalCargo(
-        currentStatus.description,
-        newStatus.description,
+        currentStatusKey,
+        newStatusKey,
       );
 
       if (!canMove) {
