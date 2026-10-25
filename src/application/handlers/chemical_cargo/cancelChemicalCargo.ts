@@ -1,9 +1,11 @@
+import { canMoveChemicalCargo } from "@/domain/rules/chemical_cargo/cargoStatusRules";
 import ChemicalCargoStatus from "@/domain/status/ChemicalCargoStatus";
 import ChemicalCargoRepository from "@/infrastructure/database/repositories/chemical_cargo/ChemicalCargoRepository";
 import ChemicalCargoStatusRepository from "@/infrastructure/database/repositories/chemical_cargo_status/ChemicalCargoStatusRepository";
 import logger from "@/infrastructure/logger/logger";
 import createHandler from "@/utils/createHandler";
 import ERROR_MESSAGES from "@/utils/errorsMessages";
+import getCargoStatusKey from "@/utils/getCargoStatusKey";
 
 const cancelChemicalCargo = createHandler(async ({ request, response }) => {
   const { id } = request.params;
@@ -19,6 +21,33 @@ const cancelChemicalCargo = createHandler(async ({ request, response }) => {
     if (!chemicalCargoToCancel) {
       logger.error(request, ERROR_MESSAGES.BAD_REQUEST)
       response.status(404).json({ error: ERROR_MESSAGES.NOT_FOUND });
+      return;
+    }
+
+    const currentStatus = await ChemicalCargoStatusRepository.readById(
+      chemicalCargoToCancel.status_id,
+    );
+
+    const currentStatusKey = currentStatus
+      ? getCargoStatusKey(currentStatus.description)
+      : undefined;
+
+    if (!currentStatusKey) {
+      logger.error(request, ERROR_MESSAGES.INVALID_STATUS_KEY);
+      response.status(500).json({ error: ERROR_MESSAGES.INVALID_STATUS_KEY });
+      return;
+    }
+
+    const { canMove, cannotMoveReasons } = canMoveChemicalCargo(
+      currentStatusKey,
+      "canceled",
+    );
+
+    if (!canMove) {
+      logger.error(request, ERROR_MESSAGES.INVALID_STATUS_TRANSITION);
+      response.status(409).json({
+        error: `${ERROR_MESSAGES.INVALID_STATUS_TRANSITION} - ${JSON.stringify(cannotMoveReasons)}`,
+      });
       return;
     }
 

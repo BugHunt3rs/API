@@ -1,7 +1,8 @@
+import { canMoveChemicalCargo } from "@/domain/rules/chemical_cargo/cargoStatusRules";
+import getCargoStatusKey from "@/utils/getCargoStatusKey";
 import ChemicalCargoRepository from "@/infrastructure/database/repositories/chemical_cargo/ChemicalCargoRepository";
 import ChemicalCargoStatusRepository from "@/infrastructure/database/repositories/chemical_cargo_status/ChemicalCargoStatusRepository";
 import logger from "@/infrastructure/logger/logger";
-import canMoveChemicalCargo from "@/utils/canMoveChemicalCargo";
 import createHandler from "@/utils/createHandler";
 import ERROR_MESSAGES from "@/utils/errorsMessages";
 
@@ -31,22 +32,49 @@ const updateChemicalCargoStatus = createHandler(
         return;
       }
 
-      const { canMove, cannotMoveReasons } = await canMoveChemicalCargo(
-        chemicalCargoToUpdate,
-      );
-
-      if (!canMove) {
-        response.status(403).json({
-          error: `${ERROR_MESSAGES.FORBIDDEN} - ${JSON.stringify(cannotMoveReasons)}`,
-        });
-      }
-
       const newStatus =
         await ChemicalCargoStatusRepository.readById(status_id);
 
+      const newStatusKey = newStatus
+        ? getCargoStatusKey(newStatus.description)
+        : undefined;
+
       if (!newStatus) {
-        logger.error(request, ERROR_MESSAGES.BAD_REQUEST)
+        logger.error(request, ERROR_MESSAGES.BAD_REQUEST);
         response.status(400).json({ error: ERROR_MESSAGES.BAD_REQUEST });
+        return;
+      }
+
+      if (!newStatusKey) {
+        logger.error(request, ERROR_MESSAGES.INVALID_STATUS_KEY);
+        response.status(400).json({ error: ERROR_MESSAGES.INVALID_STATUS_KEY });
+        return;
+      }
+
+      const currentStatus = await ChemicalCargoStatusRepository.readById(
+        chemicalCargoToUpdate.status_id,
+      );
+
+      const currentStatusKey = currentStatus
+        ? getCargoStatusKey(currentStatus.description)
+        : undefined;
+
+      if (!currentStatusKey) {
+        logger.error(request, ERROR_MESSAGES.INVALID_STATUS_KEY);
+        response.status(500).json({ error: ERROR_MESSAGES.INVALID_STATUS_KEY });
+        return;
+      }
+
+      const { canMove, cannotMoveReasons } = canMoveChemicalCargo(
+        currentStatusKey,
+        newStatusKey,
+      );
+
+      if (!canMove) {
+        logger.error(request, ERROR_MESSAGES.INVALID_STATUS_TRANSITION);
+        response.status(409).json({
+          error: `${ERROR_MESSAGES.INVALID_STATUS_TRANSITION} - ${JSON.stringify(cannotMoveReasons)}`,
+        });
         return;
       }
 

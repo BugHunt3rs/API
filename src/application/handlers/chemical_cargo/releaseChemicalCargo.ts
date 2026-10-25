@@ -1,10 +1,11 @@
+import { canMoveChemicalCargo } from "@/domain/rules/chemical_cargo/cargoStatusRules";
 import ChemicalCargoStatus from "@/domain/status/ChemicalCargoStatus";
 import ChemicalCargoRepository from "@/infrastructure/database/repositories/chemical_cargo/ChemicalCargoRepository";
 import ChemicalCargoStatusRepository from "@/infrastructure/database/repositories/chemical_cargo_status/ChemicalCargoStatusRepository";
 import logger from "@/infrastructure/logger/logger";
-import canMoveChemicalCargo from "@/utils/canMoveChemicalCargo";
 import createHandler from "@/utils/createHandler";
 import ERROR_MESSAGES from "@/utils/errorsMessages";
+import getCargoStatusKey from "@/utils/getCargoStatusKey";
 
 const releaseChemicalCargo = createHandler(async ({ request, response }) => {
   const { id } = request.params;
@@ -24,16 +25,6 @@ const releaseChemicalCargo = createHandler(async ({ request, response }) => {
       return;
     }
 
-    const { canMove, cannotMoveReasons } = await canMoveChemicalCargo(
-      chemicalCargoToRelease,
-    );
-
-    if (!canMove) {
-      response.status(403).json({
-        error: `${ERROR_MESSAGES.FORBIDDEN} - ${JSON.stringify(cannotMoveReasons)}`,
-      });
-    }
-
     if (!chemicalCargoToRelease.required_documentation_id) {
       logger.error(request, ERROR_MESSAGES.FORBIDDEN)
       response.status(403).json({ error: ERROR_MESSAGES.FORBIDDEN });
@@ -44,15 +35,26 @@ const releaseChemicalCargo = createHandler(async ({ request, response }) => {
       chemicalCargoToRelease.status_id,
     );
 
-    if (!chemicalCargoStatus) {
-      logger.error(request, ERROR_MESSAGES.UNEXPECTED_ERROR)
-      response.status(500).json({ error: ERROR_MESSAGES.UNEXPECTED_ERROR });
+    const currentStatusKey = chemicalCargoStatus
+      ? getCargoStatusKey(chemicalCargoStatus.description)
+      : undefined;
+
+    if (!currentStatusKey) {
+      logger.error(request, ERROR_MESSAGES.INVALID_STATUS_KEY);
+      response.status(500).json({ error: ERROR_MESSAGES.INVALID_STATUS_KEY });
       return;
     }
 
-    if (chemicalCargoStatus.description === ChemicalCargoStatus.blocked) {
-      logger.error(request, ERROR_MESSAGES.FORBIDDEN)
-      response.status(403).json({ error: ERROR_MESSAGES.FORBIDDEN });
+    const { canMove, cannotMoveReasons } = canMoveChemicalCargo(
+      currentStatusKey,
+      "released",
+    );
+
+    if (!canMove) {
+      logger.error(request, ERROR_MESSAGES.INVALID_STATUS_TRANSITION);
+      response.status(409).json({
+        error: `${ERROR_MESSAGES.INVALID_STATUS_TRANSITION} - ${JSON.stringify(cannotMoveReasons)}`,
+      });
       return;
     }
 
@@ -68,7 +70,7 @@ const releaseChemicalCargo = createHandler(async ({ request, response }) => {
       return;
     }
 
-    const releasedChemicalCargo = ChemicalCargoRepository.update(
+    const releasedChemicalCargo = await ChemicalCargoRepository.update(
       chemicalCargoToRelease.id,
       { status_id: releasedCargoStatusId },
     );
