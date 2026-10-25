@@ -1,12 +1,12 @@
-import ChemicalCargoStatus from "@/domain/status/ChemicalCargoStatus";
+import ChemicalCargoStatus, {
+  type ChemicalCargoStatusKey,
+} from "@/domain/status/ChemicalCargoStatus";
 
 const CANNOT_MOVE_REASON = {
   STATUS_BLOCKED: "Cargo status is blocked",
   STATUS_CANCELED: "Cargo status is canceled",
   TRANSITION_NOT_ALLOWED: "Status transition not allowed",
 };
-
-type ChemicalCargoStatusKey = keyof typeof ChemicalCargoStatus;
 
 const ALLOWED_CHEMICAL_CARGO_MOVEMENTS: Record<
   ChemicalCargoStatusKey,
@@ -29,22 +29,21 @@ const ALLOWED_CHEMICAL_CARGO_MOVEMENTS: Record<
   canceled: [],
 };
 
-export function canMoveChemicalCargo(from: string, to: string) {
-  const fromKey = (
-    Object.keys(ChemicalCargoStatus) as ChemicalCargoStatusKey[]
-  ).find((key) => ChemicalCargoStatus[key] === from);
-
-  const canMove = fromKey
-    ? ALLOWED_CHEMICAL_CARGO_MOVEMENTS[fromKey].includes(to)
-    : false;
+export function canMoveChemicalCargo(
+  from: ChemicalCargoStatusKey,
+  to: ChemicalCargoStatusKey,
+) {
+  const canMove = ALLOWED_CHEMICAL_CARGO_MOVEMENTS[from].includes(
+    ChemicalCargoStatus[to],
+  );
   const cannotMoveReasons: string[] = [];
 
   if (!canMove) {
     switch (from) {
-      case ChemicalCargoStatus.blocked:
+      case "blocked":
         cannotMoveReasons.push(CANNOT_MOVE_REASON.STATUS_BLOCKED);
         break;
-      case ChemicalCargoStatus.canceled:
+      case "canceled":
         cannotMoveReasons.push(CANNOT_MOVE_REASON.STATUS_CANCELED);
         break;
       default:
