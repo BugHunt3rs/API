@@ -36,12 +36,12 @@ export function canMoveChemicalCargo(
   const cannotMoveReasons: string[] = [];
   let canMove = false;
 
-  switch (from) {
-    case "canceled":
+  switch (ChemicalCargoStatus[from]) {
+    case ChemicalCargoStatus.canceled:
       cannotMoveReasons.push(CANNOT_MOVE_REASON.STATUS_CANCELED);
       break;
-    case "blocked":
-      canMove = to === "canceled";
+    case ChemicalCargoStatus.blocked:
+      canMove = ChemicalCargoStatus[to] === ChemicalCargoStatus.canceled;
       if (!canMove) cannotMoveReasons.push(CANNOT_MOVE_REASON.STATUS_BLOCKED);
       break;
     default:
