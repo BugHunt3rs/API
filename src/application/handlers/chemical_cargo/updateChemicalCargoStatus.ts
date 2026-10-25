@@ -1,5 +1,5 @@
 import { canMoveChemicalCargo } from "@/domain/rules/chemical_cargo/cargoStatusRules";
-import { getStatusKey } from "@/domain/status/ChemicalCargoStatus";
+import getStatusKey from "@/utils/getStatusKey";
 import ChemicalCargoRepository from "@/infrastructure/database/repositories/chemical_cargo/ChemicalCargoRepository";
 import ChemicalCargoStatusRepository from "@/infrastructure/database/repositories/chemical_cargo_status/ChemicalCargoStatusRepository";
 import logger from "@/infrastructure/logger/logger";

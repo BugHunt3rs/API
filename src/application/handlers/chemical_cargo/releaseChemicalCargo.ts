@@ -1,12 +1,11 @@
 import { canMoveChemicalCargo } from "@/domain/rules/chemical_cargo/cargoStatusRules";
-import ChemicalCargoStatus, {
-  getStatusKey,
-} from "@/domain/status/ChemicalCargoStatus";
+import ChemicalCargoStatus from "@/domain/status/ChemicalCargoStatus";
 import ChemicalCargoRepository from "@/infrastructure/database/repositories/chemical_cargo/ChemicalCargoRepository";
 import ChemicalCargoStatusRepository from "@/infrastructure/database/repositories/chemical_cargo_status/ChemicalCargoStatusRepository";
 import logger from "@/infrastructure/logger/logger";
 import createHandler from "@/utils/createHandler";
 import ERROR_MESSAGES from "@/utils/errorsMessages";
+import getStatusKey from "@/utils/getStatusKey";
 
 const releaseChemicalCargo = createHandler(async ({ request, response }) => {
   const { id } = request.params;
