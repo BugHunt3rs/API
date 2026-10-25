@@ -5,7 +5,7 @@ import ChemicalCargoStatusRepository from "@/infrastructure/database/repositorie
 import logger from "@/infrastructure/logger/logger";
 import createHandler from "@/utils/createHandler";
 import ERROR_MESSAGES from "@/utils/errorsMessages";
-import getStatusKey from "@/utils/getStatusKey";
+import getCargoStatusKey from "@/utils/getCargoStatusKey";
 
 const releaseChemicalCargo = createHandler(async ({ request, response }) => {
   const { id } = request.params;
@@ -36,7 +36,7 @@ const releaseChemicalCargo = createHandler(async ({ request, response }) => {
     );
 
     const currentStatusKey = chemicalCargoStatus
-      ? getStatusKey(chemicalCargoStatus.description)
+      ? getCargoStatusKey(chemicalCargoStatus.description)
       : undefined;
 
     if (!currentStatusKey) {

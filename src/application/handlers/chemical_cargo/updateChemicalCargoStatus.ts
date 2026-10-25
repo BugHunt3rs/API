@@ -1,5 +1,5 @@
 import { canMoveChemicalCargo } from "@/domain/rules/chemical_cargo/cargoStatusRules";
-import getStatusKey from "@/utils/getStatusKey";
+import getCargoStatusKey from "@/utils/getCargoStatusKey";
 import ChemicalCargoRepository from "@/infrastructure/database/repositories/chemical_cargo/ChemicalCargoRepository";
 import ChemicalCargoStatusRepository from "@/infrastructure/database/repositories/chemical_cargo_status/ChemicalCargoStatusRepository";
 import logger from "@/infrastructure/logger/logger";
@@ -36,7 +36,7 @@ const updateChemicalCargoStatus = createHandler(
         await ChemicalCargoStatusRepository.readById(status_id);
 
       const newStatusKey = newStatus
-        ? getStatusKey(newStatus.description)
+        ? getCargoStatusKey(newStatus.description)
         : undefined;
 
       if (!newStatus) {
@@ -56,7 +56,7 @@ const updateChemicalCargoStatus = createHandler(
       );
 
       const currentStatusKey = currentStatus
-        ? getStatusKey(currentStatus.description)
+        ? getCargoStatusKey(currentStatus.description)
         : undefined;
 
       if (!currentStatusKey) {
