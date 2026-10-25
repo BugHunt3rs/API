@@ -9,4 +9,12 @@ export const ChemicalCargoStatus = {
   canceled: "Canceled",
 };
 
+export type ChemicalCargoStatusKey = keyof typeof ChemicalCargoStatus;
+
+export function getStatusKey(description: string) {
+  return (Object.keys(ChemicalCargoStatus) as ChemicalCargoStatusKey[]).find(
+    (key) => ChemicalCargoStatus[key] === description,
+  );
+}
+
 export default ChemicalCargoStatus;
