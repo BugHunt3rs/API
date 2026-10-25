@@ -33,22 +33,24 @@ export function canMoveChemicalCargo(
   from: ChemicalCargoStatusKey,
   to: ChemicalCargoStatusKey,
 ) {
-  const canMove = ALLOWED_CHEMICAL_CARGO_MOVEMENTS[from].includes(
-    ChemicalCargoStatus[to],
-  );
   const cannotMoveReasons: string[] = [];
+  let canMove = false;
 
-  if (!canMove) {
-    switch (from) {
-      case "blocked":
-        cannotMoveReasons.push(CANNOT_MOVE_REASON.STATUS_BLOCKED);
-        break;
-      case "canceled":
-        cannotMoveReasons.push(CANNOT_MOVE_REASON.STATUS_CANCELED);
-        break;
-      default:
+  switch (from) {
+    case "canceled":
+      cannotMoveReasons.push(CANNOT_MOVE_REASON.STATUS_CANCELED);
+      break;
+    case "blocked":
+      canMove = to === "canceled";
+      if (!canMove) cannotMoveReasons.push(CANNOT_MOVE_REASON.STATUS_BLOCKED);
+      break;
+    default:
+      canMove = ALLOWED_CHEMICAL_CARGO_MOVEMENTS[from].includes(
+        ChemicalCargoStatus[to],
+      );
+      if (!canMove) {
         cannotMoveReasons.push(CANNOT_MOVE_REASON.TRANSITION_NOT_ALLOWED);
-    }
+      }
   }
 
   return { canMove, cannotMoveReasons };
