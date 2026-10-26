@@ -9,4 +9,6 @@ export const ChemicalCargoStatus = {
   canceled: "Canceled",
 };
 
+export type ChemicalCargoStatusKey = keyof typeof ChemicalCargoStatus;
+
 export default ChemicalCargoStatus;
