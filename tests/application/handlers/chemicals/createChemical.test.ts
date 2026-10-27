@@ -14,6 +14,7 @@ const validChemical = {
   UN_number: "UN1830",
   status: true,
   risk_class_id: 8,
+  compatibility_group_id: 2,
 };
 
 describe("createChemical", () => {
@@ -65,6 +66,19 @@ describe("createChemical", () => {
       mockRequest({ ...validChemical, status: "active" }),
       response,
     );
+
+    expect(ChemicalRepository.create).not.toHaveBeenCalled();
+    expect(response.status).toHaveBeenCalledWith(400);
+    expect(response.json).toHaveBeenCalledWith({
+      error: ERROR_MESSAGES.BAD_REQUEST,
+    });
+  });
+
+  it("blocks the creation of a chemical without compatibility group", async () => {
+    const { compatibility_group_id: _group, ...withoutGroup } = validChemical;
+    const response = mockResponse();
+
+    await createChemical(mockRequest(withoutGroup), response);
 
     expect(ChemicalRepository.create).not.toHaveBeenCalled();
     expect(response.status).toHaveBeenCalledWith(400);

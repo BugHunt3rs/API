@@ -13,6 +13,7 @@ const createChemical = createHandler(async ({ request, response }) => {
       "description",
       "UN_number",
       "risk_class_id",
+      "compatibility_group_id",
       "status",
     ]) ||
     typeof body.name !== "string" ||
