@@ -58,6 +58,21 @@ describe("createChemical", () => {
     expect(response.status).toHaveBeenCalledWith(400);
   });
 
+  it("blocks the creation of a chemical with a status that is not boolean", async () => {
+    const response = mockResponse();
+
+    await createChemical(
+      mockRequest({ ...validChemical, status: "active" }),
+      response,
+    );
+
+    expect(ChemicalRepository.create).not.toHaveBeenCalled();
+    expect(response.status).toHaveBeenCalledWith(400);
+    expect(response.json).toHaveBeenCalledWith({
+      error: ERROR_MESSAGES.BAD_REQUEST,
+    });
+  });
+
   it("blocks the creation of a chemical without risk class", async () => {
     const { risk_class_id: _riskClass, ...withoutRiskClass } = validChemical;
     const response = mockResponse();

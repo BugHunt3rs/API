@@ -16,7 +16,8 @@ const createChemical = createHandler(async ({ request, response }) => {
       "status",
     ]) ||
     typeof body.name !== "string" ||
-    !body.name.trim()
+    !body.name.trim() ||
+    typeof body.status !== "boolean"
   ) {
     logger.error(request, ERROR_MESSAGES.BAD_REQUEST);
     response.status(400).json({ error: ERROR_MESSAGES.BAD_REQUEST });
