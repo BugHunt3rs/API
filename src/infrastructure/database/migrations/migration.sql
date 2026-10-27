@@ -98,3 +98,34 @@ values
 ('Moving'),
 ('Done'),
 ('Canceled');
+
+INSERT INTO risk_class (description)
+values
+('Explosives'),
+('Gases'),
+('Flammable liquids'),
+('Flammable solids'),
+('Oxidizing substances and organic peroxides'),
+('Toxic and infectious substances'),
+('Radioactive material'),
+('Corrosives'),
+('Miscellaneous dangerous substances');
+
+INSERT INTO measure_unity (description)
+values
+('Kilogram'),
+('Liter'),
+('Ton'),
+('Cubic meter');
+
+INSERT INTO required_documentation (description)
+values
+('Safety data sheet (FISPQ)'),
+('Transport license'),
+('Product analysis certificate');
+
+INSERT INTO technical_manager (name)
+values
+('Ana Souza'),
+('Carlos Lima'),
+('Marina Alves');
