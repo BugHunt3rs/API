@@ -14,16 +14,18 @@ model cargo_status {
 }
 
 model chemical {
-  id             Int              @id @default(autoincrement())
-  name           String           @db.VarChar(255)
-  description    String           @db.VarChar(255)
-  UN_number      String           @db.VarChar(4)
-  risk_class_id  Int
-  status         Boolean
-  create_date    DateTime         @default(now()) @db.Timestamptz(6)
-  update_date    DateTime         @default(now()) @db.Timestamptz(6)
-  risk_class     risk_class       @relation(fields: [risk_class_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  chemical_cargo chemical_cargo[]
+  id                     Int                 @id @default(autoincrement())
+  name                   String              @db.VarChar(255)
+  description            String              @db.VarChar(255)
+  UN_number              String              @db.VarChar(4)
+  risk_class_id          Int
+  compatibility_group_id Int
+  status                 Boolean
+  create_date            DateTime            @default(now()) @db.Timestamptz(6)
+  update_date            DateTime            @default(now()) @db.Timestamptz(6)
+  risk_class             risk_class          @relation(fields: [risk_class_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  compatibility_group    compatibility_group @relation(fields: [compatibility_group_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  chemical_cargo         chemical_cargo[]
 }
 
 model chemical_cargo {
@@ -45,6 +47,13 @@ model chemical_cargo {
   required_documentation    required_documentation @relation(fields: [required_documentation_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "chemical_cargo_required_documentation_fkey")
   cargo_status              cargo_status           @relation(fields: [status_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "chemical_cargo_status_fkey")
   technical_manager         technical_manager      @relation(fields: [technical_manager_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "chemical_cargo_tecnical_manager_fkey")
+}
+
+model compatibility_group {
+  id          Int        @id @default(autoincrement())
+  description String     @db.VarChar(255)
+  create_date DateTime   @default(now()) @db.Timestamptz(6)
+  chemical    chemical[]
 }
 
 model logs {
