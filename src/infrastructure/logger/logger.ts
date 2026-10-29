@@ -115,15 +115,19 @@ const logger = {
   create: (requestObject: Request, newValue: Object) =>
     createLog({ logType: LOG_TYPE.CREATE, requestObject, newValue }),
   update: (requestObject: Request, oldValue: Object, newValue: Object) =>
-    createLog({ logType: LOG_TYPE.CREATE, requestObject, newValue, oldValue }),
+    createLog({ logType: LOG_TYPE.UPDATE, requestObject, newValue, oldValue }),
   deletion: (requestObject: Request, oldValue: Object) =>
     createLog({ logType: LOG_TYPE.DELETE, requestObject, oldValue }),
   error: (requestObject: Request, errorMessage: string) =>
     createLog({ logType: LOG_TYPE.ERROR, requestObject, error: errorMessage }),
   info: (requestObject: Request, infoMessage: string) =>
-    createLog({ logType: LOG_TYPE.ERROR, requestObject, info: infoMessage }),
+    createLog({ logType: LOG_TYPE.INFO, requestObject, info: infoMessage }),
   warn: (requestObject: Request, warnMessage: string) =>
-    createLog({ logType: LOG_TYPE.ERROR, requestObject, warning: warnMessage }),
+    createLog({
+      logType: LOG_TYPE.WARNING,
+      requestObject,
+      warning: warnMessage,
+    }),
 };
 
 export default logger;
