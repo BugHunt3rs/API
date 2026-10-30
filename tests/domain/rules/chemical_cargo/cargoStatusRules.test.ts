@@ -72,3 +72,38 @@ describe("canMoveChemicalCargo", () => {
     });
   });
 });
+
+describe("canMoveChemicalCargo documentation", () => {
+  it.each<[ChemicalCargoStatusKey, ChemicalCargoStatusKey]>([
+    ["underAnalyses", "underInspection"],
+    ["underInspection", "released"],
+  ])("refuses %s -> %s without delivered documentation", (from, to) => {
+    expect(canMoveChemicalCargo(from, to, false)).toEqual({
+      canMove: false,
+      cannotMoveReasons: ["Documentation not delivered"],
+    });
+  });
+
+  it("allows underInspection -> released with delivered documentation", () => {
+    expect(canMoveChemicalCargo("underInspection", "released", true)).toEqual({
+      canMove: true,
+      cannotMoveReasons: [],
+    });
+  });
+
+  it.each<[ChemicalCargoStatusKey, ChemicalCargoStatusKey]>([
+    ["registered", "underAnalyses"],
+    ["underInspection", "blocked"],
+    ["released", "moving"],
+    ["underInspection", "canceled"],
+  ])("does not ask for documentation on %s -> %s", (from, to) => {
+    expect(canMoveChemicalCargo(from, to, false).canMove).toBe(true);
+  });
+
+  it("does not add the documentation reason to a transition that is already forbidden", () => {
+    expect(canMoveChemicalCargo("underAnalyses", "released", false)).toEqual({
+      canMove: false,
+      cannotMoveReasons: ["Status transition not allowed"],
+    });
+  });
+});
