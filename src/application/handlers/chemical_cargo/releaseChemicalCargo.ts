@@ -25,12 +25,6 @@ const releaseChemicalCargo = createHandler(async ({ request, response }) => {
       return;
     }
 
-    if (!chemicalCargoToRelease.required_documentation_id) {
-      logger.error(request, ERROR_MESSAGES.FORBIDDEN)
-      response.status(403).json({ error: ERROR_MESSAGES.FORBIDDEN });
-      return;
-    }
-
     const chemicalCargoStatus = await ChemicalCargoStatusRepository.readById(
       chemicalCargoToRelease.status_id,
     );
