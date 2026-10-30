@@ -38,6 +38,7 @@ model chemical_cargo {
   destination               String                 @db.VarChar(255)
   technical_manager_id      Int
   required_documentation_id Int
+  documentation_delivered   Boolean                @default(false)
   status_id                 Int
   delivery_date             DateTime               @db.Date
   create_date               DateTime               @default(now()) @db.Timestamptz(6)

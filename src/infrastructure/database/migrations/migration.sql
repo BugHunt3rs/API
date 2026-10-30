@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS "chemical_cargo" (
 	"destination" VARCHAR(255) NOT NULL,
 	"technical_manager_id" INTEGER NOT NULL,
 	"required_documentation_id" INTEGER NOT NULL,
+	"documentation_delivered" BOOLEAN NOT NULL DEFAULT FALSE,
 	"status_id" INTEGER NOT NULL,
 	"delivery_date" DATE NOT NULL,
 	"create_date" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
