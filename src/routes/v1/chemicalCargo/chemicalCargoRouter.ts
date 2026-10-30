@@ -1,6 +1,7 @@
 import blockChemicalCargo from "@/application/handlers/chemical_cargo/blockChemicalCargo";
 import cancelChemicalCargo from "@/application/handlers/chemical_cargo/cancelChemicalCargo";
 import { createChemicalCargo } from "@/application/handlers/chemical_cargo/createChemicalCargo";
+import deliverChemicalCargoDocumentation from "@/application/handlers/chemical_cargo/deliverChemicalCargoDocumentation";
 import readChemicalCargoById from "@/application/handlers/chemical_cargo/readChemicalCargoById";
 import readChemicalCargos from "@/application/handlers/chemical_cargo/readChemicalCargos";
 import releaseChemicalCargo from "@/application/handlers/chemical_cargo/releaseChemicalCargo";
@@ -16,5 +17,9 @@ chemicalCargoRouter.patch("/:id", updateChemicalCargoStatus);
 chemicalCargoRouter.patch("/block/:id", blockChemicalCargo);
 chemicalCargoRouter.patch("/release/:id", releaseChemicalCargo);
 chemicalCargoRouter.patch("/cancel/:id", cancelChemicalCargo);
+chemicalCargoRouter.patch(
+  "/documentation/:id",
+  deliverChemicalCargoDocumentation,
+);
 
 export default chemicalCargoRouter;
