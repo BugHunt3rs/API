@@ -10,10 +10,14 @@ export type ChemicalCargo = {
   destination: string;
   technical_manager_id: number;
   required_documentation_id: number;
+  documentation_delivered: boolean;
   status_id: number;
   delivery_date: Date;
   create_date: Date;
   update_date: Date;
 };
 
-export type NewChemicalCargo = NewEntity<ChemicalCargo>;
+export type NewChemicalCargo = Omit<
+  NewEntity<ChemicalCargo>,
+  "documentation_delivered"
+>;
