@@ -42,7 +42,7 @@ const releaseChemicalCargo = createHandler(async ({ request, response }) => {
     const { canMove, cannotMoveReasons } = canMoveChemicalCargo(
       currentStatusKey,
       "released",
-      chemicalCargoToRelease.documentation_delivered,
+      chemicalCargoToRelease.delivered_documentation_id !== null,
     );
 
     if (!canMove) {

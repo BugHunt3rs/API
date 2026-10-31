@@ -41,7 +41,7 @@ const blockChemicalCargo = createHandler(async ({ request, response }) => {
     const { canMove, cannotMoveReasons } = canMoveChemicalCargo(
       currentStatusKey,
       "blocked",
-      chemicalCargoToBlock.documentation_delivered,
+      chemicalCargoToBlock.delivered_documentation_id !== null,
     );
 
     if (!canMove) {

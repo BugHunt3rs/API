@@ -68,7 +68,7 @@ const updateChemicalCargoStatus = createHandler(
       const { canMove, cannotMoveReasons } = canMoveChemicalCargo(
         currentStatusKey,
         newStatusKey,
-        chemicalCargoToUpdate.documentation_delivered,
+        chemicalCargoToUpdate.delivered_documentation_id !== null,
       );
 
       if (!canMove) {
