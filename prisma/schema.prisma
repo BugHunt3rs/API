@@ -38,7 +38,6 @@ model chemical_cargo {
   destination                String                  @db.VarChar(255)
   technical_manager_id       Int
   required_documentation_id  Int
-  documentation_delivered    Boolean                 @default(false)
   delivered_documentation_id Int?
   status_id                  Int
   delivery_date              DateTime                @db.Date
