@@ -6,6 +6,33 @@ info:
     API de controle de cargas de produtos químicos.
 
     Respostas de sucesso: `{ "data": ... }`. Respostas de erro: `{ "error": "mensagem" }`.
+
+    ## Fluxo de status da carga
+
+    | De | Para (permitido) |
+    |---|---|
+    | `Registered` | `Under Analyses`, `Canceled` |
+    | `Under Analyses` | `Under inspection` ⚠️, `Canceled` |
+    | `Under inspection` | `Released` ⚠️, `Blocked`, `Canceled` |
+    | `Released` | `Moving`, `Canceled` |
+    | `Blocked` | `Canceled` |
+    | `Moving` | `Done` |
+    | `Done` | final |
+    | `Canceled` | final |
+
+    ⚠️ Exige documentação entregue (`PATCH /v1/chemicalCargo/documentation/{id}`).
+
+    ## Transição recusada
+
+    Qualquer outra transição retorna **409** com o motivo:
+    `Invalid status transition - ["motivo"]`
+
+    | Motivo | Quando |
+    |---|---|
+    | `Cargo status is blocked` | A carga está bloqueada |
+    | `Cargo status is canceled` | A carga está cancelada |
+    | `Status transition not allowed` | O destino não está no fluxo |
+    | `Documentation not delivered` | A transição exige documentação |
 servers:
   - url: http://localhost:5173
     description: Desenvolvimento local
@@ -190,6 +217,88 @@ paths:
         "400": { $ref: "#/components/responses/BadRequest" }
         "404": { $ref: "#/components/responses/NotFound" }
         "409": { $ref: "#/components/responses/InvalidTransition" }
+        "500": { $ref: "#/components/responses/Unexpected" }
+  /v1/chemicalCargo/block/{id}:
+    parameters:
+      - $ref: "#/components/parameters/Id"
+    patch:
+      tags: [ChemicalCargo]
+      summary: Bloqueia a carga
+      description: Só é permitido a partir de **Under inspection**.
+      responses:
+        "200":
+          description: Carga bloqueada
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ChemicalCargoResponse" }
+        "400": { $ref: "#/components/responses/InvalidId" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/InvalidTransition" }
+        "500": { $ref: "#/components/responses/Unexpected" }
+  /v1/chemicalCargo/release/{id}:
+    parameters:
+      - $ref: "#/components/parameters/Id"
+    patch:
+      tags: [ChemicalCargo]
+      summary: Libera a carga
+      description: |
+        Só é permitido a partir de **Under inspection** e com a documentação entregue.
+        Sem documentação: 409 `Invalid status transition - ["Documentation not delivered"]`.
+      responses:
+        "200":
+          description: Carga liberada
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ChemicalCargoResponse" }
+        "400": { $ref: "#/components/responses/InvalidId" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/InvalidTransition" }
+        "500": { $ref: "#/components/responses/Unexpected" }
+  /v1/chemicalCargo/cancel/{id}:
+    parameters:
+      - $ref: "#/components/parameters/Id"
+    patch:
+      tags: [ChemicalCargo]
+      summary: Cancela a carga
+      description: Permitido em Registered, Under Analyses, Under inspection, Released e Blocked. Cancelada é um estado final.
+      responses:
+        "200":
+          description: Carga cancelada
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ChemicalCargoResponse" }
+        "400": { $ref: "#/components/responses/InvalidId" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/InvalidTransition" }
+        "500": { $ref: "#/components/responses/Unexpected" }
+  /v1/chemicalCargo/documentation/{id}:
+    parameters:
+      - $ref: "#/components/parameters/Id"
+    patch:
+      tags: [ChemicalCargo]
+      summary: Registra a entrega da documentação
+      description: |
+        Associa à carga o id de uma documentação existente (`delivered_documentation_id`).
+        Libera as transições Under Analyses → Under inspection e Under inspection → Released.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [documentation_id]
+              properties:
+                documentation_id:
+                  type: integer
+                  example: 1
+      responses:
+        "200":
+          description: Documentação registrada
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ChemicalCargoResponse" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "404": { $ref: "#/components/responses/NotFound" }
         "500": { $ref: "#/components/responses/Unexpected" }
 components:
   parameters:
