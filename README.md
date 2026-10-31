@@ -1,6 +1,6 @@
 # Quimi-Port API
 
-🇧🇷 Português · [🇺🇸 English](README.en.md)
+🇧🇷 Português · [🇺🇸 English](docs/README.en.md)
 
 API REST para o cadastro de produtos químicos e o controle do ciclo de vida das cargas químicas movimentadas em terminais portuários.
 

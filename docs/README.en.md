@@ -1,6 +1,6 @@
 # Quimi-Port API
 
-[🇧🇷 Português](README.md) · 🇺🇸 English
+[🇧🇷 Português](../README.md) · 🇺🇸 English
 
 REST API to register chemical products and control the life cycle of the chemical cargos moved through port terminals.
 
@@ -196,7 +196,7 @@ There are no integration tests against a real database. The complete flows were 
 The documentation is an **OpenAPI 3** specification (`openapi.yaml`, at the project root), served by Swagger UI while the API is running:
 
 - **Swagger UI:** `http://localhost:3000/docs` (or the port set in `PORT`)
-- **Specification file:** [`openapi.yaml`](openapi.yaml)
+- **Specification file:** [`openapi.yaml`](../openapi.yaml)
 
 It lists every endpoint, parameter, request and response body with examples, the error codes and the status transition table. You can try each route with the **Try it out** button.
 
@@ -355,7 +355,7 @@ The `block`, `release` and `cancel` endpoints are shortcuts to the `Blocked`, `R
 
 ## Database
 
-PostgreSQL 17, with the schema created by [`src/infrastructure/database/migrations/migration.sql`](src/infrastructure/database/migrations/migration.sql) (run when the volume is first created) and mapped in Prisma at [`prisma/schema.prisma`](prisma/schema.prisma). The server time zone is `America/Sao_Paulo`, and dates use `TIMESTAMPTZ`.
+PostgreSQL 17, with the schema created by [`src/infrastructure/database/migrations/migration.sql`](../src/infrastructure/database/migrations/migration.sql) (run when the volume is first created) and mapped in Prisma at [`prisma/schema.prisma`](../prisma/schema.prisma). The server time zone is `America/Sao_Paulo`, and dates use `TIMESTAMPTZ`.
 
 ```mermaid
 erDiagram
@@ -437,7 +437,7 @@ Example line: `ERROR (PATCH /v1/chemicalCargo/1) - new_value: null | old_value: 
 
 ## Continuous integration
 
-The workflow [`.github/workflows/build_database_and_api.yml`](.github/workflows/build_database_and_api.yml) runs on every `push` and `pull request` to `main`: it installs the dependencies, runs the tests (`npm run test`) and builds the images with `docker compose up -d --build` (the API image runs `npm run build`, which type-checks with `tsc` and bundles with `tsdown`). There is no deploy step. The credentials used by the workflow come from the repository secrets.
+The workflow [`.github/workflows/build_database_and_api.yml`](../.github/workflows/build_database_and_api.yml) runs on every `push` and `pull request` to `main`: it installs the dependencies, runs the tests (`npm run test`) and builds the images with `docker compose up -d --build` (the API image runs `npm run build`, which type-checks with `tsc` and bundles with `tsdown`). There is no deploy step. The credentials used by the workflow come from the repository secrets.
 
 ---
 
