@@ -11,6 +11,7 @@ export type ChemicalCargo = {
   technical_manager_id: number;
   required_documentation_id: number;
   documentation_delivered: boolean;
+  delivered_documentation_id: number | null;
   status_id: number;
   delivery_date: Date;
   create_date: Date;
@@ -19,5 +20,5 @@ export type ChemicalCargo = {
 
 export type NewChemicalCargo = Omit<
   NewEntity<ChemicalCargo>,
-  "documentation_delivered"
+  "documentation_delivered" | "delivered_documentation_id"
 >;
