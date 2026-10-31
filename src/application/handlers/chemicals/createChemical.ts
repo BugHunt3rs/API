@@ -13,8 +13,12 @@ const createChemical = createHandler(async ({ request, response }) => {
       "description",
       "UN_number",
       "risk_class_id",
+      "compatibility_group_id",
       "status",
-    ])
+    ]) ||
+    typeof body.name !== "string" ||
+    !body.name.trim() ||
+    typeof body.status !== "boolean"
   ) {
     logger.error(request, ERROR_MESSAGES.BAD_REQUEST);
     response.status(400).json({ error: ERROR_MESSAGES.BAD_REQUEST });

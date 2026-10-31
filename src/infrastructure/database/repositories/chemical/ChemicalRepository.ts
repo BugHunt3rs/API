@@ -3,8 +3,14 @@ import type IChemicalRepository from "../../../../domain/repositories/IChemicalR
 
 const ChemicalRepository: IChemicalRepository = {
   create: async (newChemicalData) => {
-    const { name, description, UN_number, status, risk_class_id } =
-      newChemicalData;
+    const {
+      name,
+      description,
+      UN_number,
+      status,
+      risk_class_id,
+      compatibility_group_id,
+    } = newChemicalData;
 
     const newChemical = await prisma.chemical.create({
       data: {
@@ -13,6 +19,7 @@ const ChemicalRepository: IChemicalRepository = {
         UN_number,
         status,
         risk_class_id,
+        compatibility_group_id,
       },
     });
 
@@ -36,7 +43,14 @@ const ChemicalRepository: IChemicalRepository = {
       throw new Error("Invalid ID");
     }
 
-    const { name, description, UN_number, risk_class_id, status } = newData;
+    const {
+      name,
+      description,
+      UN_number,
+      risk_class_id,
+      compatibility_group_id,
+      status,
+    } = newData;
 
     const updatedChemical = await prisma.chemical.update({
       where: { id: +id },
@@ -45,6 +59,7 @@ const ChemicalRepository: IChemicalRepository = {
         description,
         UN_number,
         risk_class_id,
+        compatibility_group_id,
         status,
         update_date: new Date(),
       },
