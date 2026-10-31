@@ -16,7 +16,103 @@ tags:
     description: Cargas de produtos químicos e seu fluxo de status
   - name: ChemicalCargoStatus
     description: Status possíveis de uma carga
-paths: {}
+paths:
+  /v1/chemical:
+    post:
+      tags: [Chemical]
+      summary: Cria um produto químico
+      description: |
+        Todos os campos são obrigatórios. `name` não pode ser vazio e `status` deve ser booleano.
+        `risk_class_id` e `compatibility_group_id` devem existir (ids inexistentes retornam 500).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/NewChemical" }
+      responses:
+        "201":
+          description: Produto criado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ChemicalResponse" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "500": { $ref: "#/components/responses/Unexpected" }
+    get:
+      tags: [Chemical]
+      summary: Lista os produtos químicos
+      responses:
+        "200":
+          description: Lista de produtos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: "#/components/schemas/Chemical" }
+        "500": { $ref: "#/components/responses/Unexpected" }
+  /v1/chemical/{id}:
+    parameters:
+      - $ref: "#/components/parameters/Id"
+    get:
+      tags: [Chemical]
+      summary: Busca um produto pelo id
+      responses:
+        "200":
+          description: Produto encontrado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ChemicalResponse" }
+        "400": { $ref: "#/components/responses/InvalidId" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "500": { $ref: "#/components/responses/Unexpected" }
+    patch:
+      tags: [Chemical]
+      summary: Atualiza campos de um produto
+      description: Todos os campos são opcionais; só os enviados são alterados.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/UpdateChemical" }
+      responses:
+        "200":
+          description: Produto atualizado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ChemicalResponse" }
+        "400": { $ref: "#/components/responses/InvalidId" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "500": { $ref: "#/components/responses/Unexpected" }
+    delete:
+      tags: [Chemical]
+      summary: Remove um produto
+      responses:
+        "200":
+          description: Produto removido
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ChemicalResponse" }
+        "400": { $ref: "#/components/responses/InvalidId" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "500": { $ref: "#/components/responses/Unexpected" }
+  /v1/chemical/deactivate/{id}:
+    parameters:
+      - $ref: "#/components/parameters/Id"
+    patch:
+      tags: [Chemical]
+      summary: Inativa um produto
+      description: Um produto inativo não pode receber novas cargas.
+      responses:
+        "200":
+          description: Produto inativado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ChemicalResponse" }
+        "400": { $ref: "#/components/responses/InvalidId" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "500": { $ref: "#/components/responses/Unexpected" }
 components:
   parameters:
     Id:
@@ -55,3 +151,43 @@ components:
       type: object
       properties:
         error: { type: string }
+    NewChemical:
+      type: object
+      required: [name, description, UN_number, risk_class_id, compatibility_group_id, status]
+      properties:
+        name: { type: string, example: Sulfuric Acid }
+        description: { type: string, example: Strong mineral acid }
+        UN_number: { type: string, maxLength: 4, description: "Número ONU, até 4 caracteres", example: "1830" }
+        risk_class_id:
+          type: integer
+          description: "Classe de risco (1 a 9, classes ONU; 8 = Corrosives)"
+          example: 8
+        compatibility_group_id:
+          type: integer
+          description: "1 Flammables, 2 Acids, 3 Bases, 4 Oxidizers, 5 Toxics, 6 Non-reactive"
+          example: 2
+        status:
+          type: boolean
+          description: Produto ativo (true) ou inativo (false)
+          example: true
+    UpdateChemical:
+      type: object
+      properties:
+        name: { type: string }
+        description: { type: string }
+        UN_number: { type: string, maxLength: 4 }
+        risk_class_id: { type: integer }
+        compatibility_group_id: { type: integer }
+        status: { type: boolean }
+    Chemical:
+      allOf:
+        - $ref: "#/components/schemas/NewChemical"
+        - type: object
+          properties:
+            id: { type: integer, example: 1 }
+            create_date: { type: string, format: date-time }
+            update_date: { type: string, format: date-time }
+    ChemicalResponse:
+      type: object
+      properties:
+        data: { $ref: "#/components/schemas/Chemical" }
