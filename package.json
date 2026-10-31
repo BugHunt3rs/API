@@ -29,6 +29,7 @@
     "@types/jest": "^30.0.0",
     "@types/node": "^26.6.2",
     "@types/pg": "^8.23.1",
+    "@types/swagger-ui-express": "^4.1.8",
     "jest": "^30.5.2",
     "prisma": "^7.10.0",
     "tsdown": "^0.23.1",
@@ -40,6 +41,8 @@
     "@prisma/client": "^7.10.0",
     "dotenv": "^18.0.1",
     "express": "^5.2.1",
-    "pg": "^8.23.0"
+    "pg": "^8.23.0",
+    "swagger-ui-express": "^5.0.1",
+    "yaml": "^2.9.1"
   }
 }
