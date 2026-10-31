@@ -1,0 +1,57 @@
+openapi: 3.0.3
+info:
+  title: QuimiPort API
+  version: 1.0.0
+  description: |
+    API de controle de cargas de produtos químicos.
+
+    Respostas de sucesso: `{ "data": ... }`. Respostas de erro: `{ "error": "mensagem" }`.
+servers:
+  - url: http://localhost:5173
+    description: Desenvolvimento local
+tags:
+  - name: Chemical
+    description: Produtos químicos
+  - name: ChemicalCargo
+    description: Cargas de produtos químicos e seu fluxo de status
+  - name: ChemicalCargoStatus
+    description: Status possíveis de uma carga
+paths: {}
+components:
+  parameters:
+    Id:
+      name: id
+      in: path
+      required: true
+      schema: { type: integer }
+      example: 1
+  responses:
+    BadRequest:
+      description: Corpo da requisição inválido ou campo obrigatório ausente
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+          example: { error: Bad Request }
+    InvalidId:
+      description: Id da rota inválido (não é um inteiro)
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+          example: { error: Invalid ID }
+    NotFound:
+      description: Registro não encontrado
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+          example: { error: Not Found }
+    Unexpected:
+      description: Erro inesperado no servidor
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+          example: { error: Unexpected Error }
+  schemas:
+    Error:
+      type: object
+      properties:
+        error: { type: string }
