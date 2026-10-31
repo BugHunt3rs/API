@@ -6,7 +6,16 @@ const CANNOT_MOVE_REASON = {
   STATUS_BLOCKED: "Cargo status is blocked",
   STATUS_CANCELED: "Cargo status is canceled",
   TRANSITION_NOT_ALLOWED: "Status transition not allowed",
+  DOCUMENTATION_NOT_DELIVERED: "Documentation not delivered",
 };
+
+const TRANSITIONS_REQUIRING_DOCUMENTATION: [
+  ChemicalCargoStatusKey,
+  ChemicalCargoStatusKey,
+][] = [
+  ["underAnalyses", "underInspection"],
+  ["underInspection", "released"],
+];
 
 const ALLOWED_CHEMICAL_CARGO_MOVEMENTS: Record<
   ChemicalCargoStatusKey,
@@ -32,6 +41,7 @@ const ALLOWED_CHEMICAL_CARGO_MOVEMENTS: Record<
 export function canMoveChemicalCargo(
   from: ChemicalCargoStatusKey,
   to: ChemicalCargoStatusKey,
+  documentationDelivered: boolean,
 ) {
   const possibleCargoStatusMovements = ALLOWED_CHEMICAL_CARGO_MOVEMENTS[from];
   const currentStatus = ChemicalCargoStatus[from];
@@ -52,6 +62,15 @@ export function canMoveChemicalCargo(
       if (!canMove) {
         cannotMoveReasons.push(CANNOT_MOVE_REASON.TRANSITION_NOT_ALLOWED);
       }
+  }
+
+  const requiresDocumentation = TRANSITIONS_REQUIRING_DOCUMENTATION.some(
+    ([requiredFrom, requiredTo]) => requiredFrom === from && requiredTo === to,
+  );
+
+  if (canMove && requiresDocumentation && !documentationDelivered) {
+    canMove = false;
+    cannotMoveReasons.push(CANNOT_MOVE_REASON.DOCUMENTATION_NOT_DELIVERED);
   }
 
   return { canMove, cannotMoveReasons };

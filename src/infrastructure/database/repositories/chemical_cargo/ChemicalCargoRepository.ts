@@ -57,6 +57,7 @@ const ChemicalCargoRepository: IChemicalCargoRepository = {
       origin,
       quantity,
       required_documentation_id,
+      delivered_documentation_id,
       status_id,
       technical_manager_id,
     } = newData;
@@ -71,6 +72,7 @@ const ChemicalCargoRepository: IChemicalCargoRepository = {
         origin,
         quantity,
         required_documentation_id,
+        delivered_documentation_id,
         status_id,
         technical_manager_id,
         update_date: new Date(),

@@ -41,6 +41,7 @@ const cancelChemicalCargo = createHandler(async ({ request, response }) => {
     const { canMove, cannotMoveReasons } = canMoveChemicalCargo(
       currentStatusKey,
       "canceled",
+      chemicalCargoToCancel.delivered_documentation_id !== null,
     );
 
     if (!canMove) {
