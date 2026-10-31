@@ -113,6 +113,84 @@ paths:
         "400": { $ref: "#/components/responses/InvalidId" }
         "404": { $ref: "#/components/responses/NotFound" }
         "500": { $ref: "#/components/responses/Unexpected" }
+  /v1/chemicalCargo:
+    post:
+      tags: [ChemicalCargo]
+      summary: Registra uma carga
+      description: |
+        Retorna 400 se algum campo obrigatório faltar, se `quantity` for menor ou igual a zero,
+        ou se o produto não existir ou estiver inativo. A carga nasce com o status **Registered**.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/NewChemicalCargo" }
+      responses:
+        "201":
+          description: Carga registrada
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ChemicalCargoResponse" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "500": { $ref: "#/components/responses/Unexpected" }
+    get:
+      tags: [ChemicalCargo]
+      summary: Lista as cargas
+      responses:
+        "200":
+          description: Lista de cargas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: "#/components/schemas/ChemicalCargo" }
+        "500": { $ref: "#/components/responses/Unexpected" }
+  /v1/chemicalCargo/{id}:
+    parameters:
+      - $ref: "#/components/parameters/Id"
+    get:
+      tags: [ChemicalCargo]
+      summary: Busca uma carga pelo id
+      responses:
+        "200":
+          description: Carga encontrada
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ChemicalCargoResponse" }
+        "400": { $ref: "#/components/responses/InvalidId" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "500": { $ref: "#/components/responses/Unexpected" }
+    patch:
+      tags: [ChemicalCargo]
+      summary: Altera o status da carga
+      description: |
+        Aplica as regras do fluxo de status (ver a descrição geral da API).
+        Transição recusada retorna 409; `status_id` inexistente retorna 400.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status_id]
+              properties:
+                status_id:
+                  type: integer
+                  description: "1 Registered, 2 Under Analyses, 3 Under inspection, 4 Released, 5 Blocked, 6 Moving, 7 Done, 8 Canceled"
+                  example: 2
+      responses:
+        "200":
+          description: Status alterado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ChemicalCargoResponse" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/InvalidTransition" }
+        "500": { $ref: "#/components/responses/Unexpected" }
 components:
   parameters:
     Id:
@@ -140,6 +218,24 @@ components:
         application/json:
           schema: { $ref: "#/components/schemas/Error" }
           example: { error: Not Found }
+    InvalidTransition:
+      description: Transição de status recusada pelas regras do fluxo
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+          examples:
+            semDocumentacao:
+              summary: Documentação não entregue
+              value: { error: 'Invalid status transition - ["Documentation not delivered"]' }
+            naoPermitida:
+              summary: Transição fora do fluxo
+              value: { error: 'Invalid status transition - ["Status transition not allowed"]' }
+            bloqueada:
+              summary: Carga bloqueada
+              value: { error: 'Invalid status transition - ["Cargo status is blocked"]' }
+            cancelada:
+              summary: Carga cancelada
+              value: { error: 'Invalid status transition - ["Cargo status is canceled"]' }
     Unexpected:
       description: Erro inesperado no servidor
       content:
@@ -191,3 +287,52 @@ components:
       type: object
       properties:
         data: { $ref: "#/components/schemas/Chemical" }
+    NewChemicalCargo:
+      type: object
+      required:
+        - cargo_code
+        - chemical_id
+        - quantity
+        - measure_unity_id
+        - origin
+        - destination
+        - technical_manager_id
+        - required_documentation_id
+        - status_id
+        - delivery_date
+      properties:
+        cargo_code: { type: string, example: CARGO-001 }
+        chemical_id: { type: integer, example: 1 }
+        quantity: { type: integer, minimum: 1, example: 500 }
+        measure_unity_id:
+          type: integer
+          description: "1 Kilogram, 2 Liter, 3 Ton, 4 Cubic meter"
+          example: 1
+        origin: { type: string, example: Santos }
+        destination: { type: string, example: Campinas }
+        technical_manager_id: { type: integer, example: 1 }
+        required_documentation_id:
+          type: integer
+          description: Documentação exigida para a carga
+          example: 1
+        status_id:
+          type: integer
+          description: Status inicial (1 = Registered)
+          example: 1
+        delivery_date: { type: string, format: date-time, example: "2026-12-01T10:00:00Z" }
+    ChemicalCargo:
+      allOf:
+        - $ref: "#/components/schemas/NewChemicalCargo"
+        - type: object
+          properties:
+            id: { type: integer, example: 1 }
+            delivered_documentation_id:
+              type: integer
+              nullable: true
+              description: Documentação entregue; `null` enquanto não entregue
+            create_date: { type: string, format: date-time }
+            update_date: { type: string, format: date-time }
+    ChemicalCargoResponse:
+      type: object
+      properties:
+        data: { $ref: "#/components/schemas/ChemicalCargo" }
