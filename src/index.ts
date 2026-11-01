@@ -1,6 +1,7 @@
 import "dotenv/config";
 import express from "express";
-import docsRouter from "./routes/docs/docsRouter";
+import swaggerUi from "swagger-ui-express";
+import { openApiDocument, swaggerOptions } from "./routes/docs/swaggerDocs";
 import v1Router from "./routes/v1/v1Router";
 
 // chemical_cargo.quantity is a BigInt, which JSON.stringify cannot serialize
@@ -17,7 +18,11 @@ app.get("/", (_, response) => {
   response.json({ message: "ok" });
 });
 
-app.use("/docs", docsRouter);
+app.use(
+  "/docs",
+  swaggerUi.serve,
+  swaggerUi.setup(openApiDocument, swaggerOptions),
+);
 
 app.use(express.json());
 app.use("/v1", v1Router);
