@@ -173,7 +173,7 @@ npm test
 npx jest tests/domain/rules/chemical_cargo/cargoStatusRules.test.ts
 ```
 
-Tests live in `tests/`, mirroring the structure of `src/`. The suite has 95 tests covering:
+Tests live in `tests/`, mirroring the structure of `src/`. The suite has 101 tests covering:
 
 | Area | What is checked |
 | :-- | :-- |
@@ -410,6 +410,7 @@ erDiagram
 | `technical_manager` | Technical managers |
 | `required_documentation` | Documentation types: Safety data sheet (FISPQ), Transport license and Product analysis certificate |
 | `logs` | Table reserved for logs; today logs are written to files (see [Logs](#logs)) |
+| `logger` | Each method writes the log line with the correct type |
 
 The lookup tables (`cargo_status`, `risk_class`, `compatibility_group`, `measure_unity`, `technical_manager` and `required_documentation`) are created with initial data by `migration.sql`. The compatibility groups, units, technical managers and documentation types are simulated values for demonstration.
 

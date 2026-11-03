@@ -173,7 +173,7 @@ npm test
 npx jest tests/domain/rules/chemical_cargo/cargoStatusRules.test.ts
 ```
 
-Os testes ficam em `tests/`, espelhando a estrutura de `src/`. A suíte tem 95 testes, que cobrem:
+Os testes ficam em `tests/`, espelhando a estrutura de `src/`. A suíte tem 101 testes, que cobrem:
 
 | Área | O que é verificado |
 | :-- | :-- |
@@ -186,6 +186,7 @@ Os testes ficam em `tests/`, espelhando a estrutura de `src/`. A suíte tem 95 t
 | `cancelChemicalCargo` | Cancelamento nos status permitidos; recusa em `Canceled`, `Moving` e `Done` |
 | `deliverChemicalCargoDocumentation` | Registro da documentação entregue; 400 e 404 |
 | `getCargoStatusKey` | Conversão do nome do status do banco na chave usada pela regra |
+| `logger` | Cada método grava a linha de log com o tipo correto |
 
 Não há testes de integração com banco real. Os fluxos completos foram verificados manualmente contra o PostgreSQL do Docker.
 
