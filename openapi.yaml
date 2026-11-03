@@ -34,6 +34,8 @@ info:
     | `Status transition not allowed` | O destino não está no fluxo |
     | `Documentation not delivered` | A transição exige documentação |
 servers:
+  - url: http://localhost:3000
+    description: Docker
   - url: http://localhost:5173
     description: Desenvolvimento local
 tags:
