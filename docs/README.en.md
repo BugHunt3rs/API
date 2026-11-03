@@ -402,7 +402,7 @@ erDiagram
 | Table | Purpose |
 | :-- | :-- |
 | `chemical` | Chemical products: name, description, UN number (`UN_number`, up to 4 characters), risk class, compatibility group and `status` (active/inactive) |
-| `chemical_cargo` | Cargos: code, product, quantity, unit, origin, destination, technical manager, required and delivered documentation, status and delivery date |
+| `chemical_cargo` | Cargos: code, product, quantity, unit, origin, destination, technical manager, required and delivered documentation, status and entry date |
 | `cargo_status` | The 8 possible cargo statuses |
 | `risk_class` | The 9 UN risk classes (Explosives, Gases, Flammable liquids, Flammable solids, Oxidizing substances and organic peroxides, Toxic and infectious substances, Radioactive material, Corrosives, Miscellaneous dangerous substances) |
 | `compatibility_group` | Product compatibility groups: Flammables, Acids, Bases, Oxidizers, Toxics and Non-reactive |

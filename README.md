@@ -402,7 +402,7 @@ erDiagram
 | Tabela | Função |
 | :-- | :-- |
 | `chemical` | Produtos químicos: nome, descrição, número ONU (`UN_number`, até 4 caracteres), classe de risco, grupo de compatibilidade e `status` (ativo/inativo) |
-| `chemical_cargo` | Cargas: código, produto, quantidade, unidade, origem, destino, responsável técnico, documentação exigida e entregue, status e data de entrega |
+| `chemical_cargo` | Cargas: código, produto, quantidade, unidade, origem, destino, responsável técnico, documentação exigida e entregue, status e data de entrada |
 | `cargo_status` | Os 8 status possíveis de uma carga |
 | `risk_class` | As 9 classes de risco da ONU (Explosives, Gases, Flammable liquids, Flammable solids, Oxidizing substances and organic peroxides, Toxic and infectious substances, Radioactive material, Corrosives, Miscellaneous dangerous substances) |
 | `compatibility_group` | Grupos de compatibilidade do produto: Flammables, Acids, Bases, Oxidizers, Toxics e Non-reactive |
