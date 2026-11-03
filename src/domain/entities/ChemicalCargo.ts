@@ -12,7 +12,7 @@ export type ChemicalCargo = {
   required_documentation_id: number;
   delivered_documentation_id: number | null;
   status_id: number;
-  delivery_date: Date;
+  entry_date: Date;
   create_date: Date;
   update_date: Date;
 };

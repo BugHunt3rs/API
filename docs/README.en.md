@@ -260,7 +260,7 @@ curl -X POST http://localhost:3000/v1/chemical -H "Content-Type: application/jso
 
 # 2. Register a cargo of that product (status_id 1 = Registered)
 curl -X POST http://localhost:3000/v1/chemicalCargo -H "Content-Type: application/json" \
-  -d '{"cargo_code":"CARGO-100","chemical_id":1,"quantity":300,"measure_unity_id":2,"origin":"Santos","destination":"Cubatao","technical_manager_id":1,"required_documentation_id":1,"status_id":1,"delivery_date":"2026-12-10"}'
+  -d '{"cargo_code":"CARGO-100","chemical_id":1,"quantity":300,"measure_unity_id":2,"origin":"Santos","destination":"Cubatao","technical_manager_id":1,"required_documentation_id":1,"status_id":1,"entry_date":"2026-12-10"}'
 
 # 3. Send it to analysis (status_id 2 = Under Analyses)
 curl -X PATCH http://localhost:3000/v1/chemicalCargo/1 -H "Content-Type: application/json" -d '{"status_id":2}'
@@ -391,7 +391,7 @@ erDiagram
         int required_documentation_id FK
         int delivered_documentation_id FK "null until delivered"
         int status_id FK
-        date delivery_date
+        date entry_date
         timestamptz create_date
         timestamptz update_date
     }
@@ -402,7 +402,7 @@ erDiagram
 | Table | Purpose |
 | :-- | :-- |
 | `chemical` | Chemical products: name, description, UN number (`UN_number`, up to 4 characters), risk class, compatibility group and `status` (active/inactive) |
-| `chemical_cargo` | Cargos: code, product, quantity, unit, origin, destination, technical manager, required and delivered documentation, status and delivery date |
+| `chemical_cargo` | Cargos: code, product, quantity, unit, origin, destination, technical manager, required and delivered documentation, status and entry date |
 | `cargo_status` | The 8 possible cargo statuses |
 | `risk_class` | The 9 UN risk classes (Explosives, Gases, Flammable liquids, Flammable solids, Oxidizing substances and organic peroxides, Toxic and infectious substances, Radioactive material, Corrosives, Miscellaneous dangerous substances) |
 | `compatibility_group` | Product compatibility groups: Flammables, Acids, Bases, Oxidizers, Toxics and Non-reactive |

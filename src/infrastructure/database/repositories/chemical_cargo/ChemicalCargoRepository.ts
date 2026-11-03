@@ -6,7 +6,7 @@ const ChemicalCargoRepository: IChemicalCargoRepository = {
     const {
       cargo_code,
       chemical_id,
-      delivery_date,
+      entry_date,
       destination,
       measure_unity_id,
       origin,
@@ -20,7 +20,7 @@ const ChemicalCargoRepository: IChemicalCargoRepository = {
       data: {
         cargo_code,
         chemical_id,
-        delivery_date: delivery_date && new Date(delivery_date),
+        entry_date: entry_date && new Date(entry_date),
         destination,
         measure_unity_id,
         origin,
@@ -51,7 +51,7 @@ const ChemicalCargoRepository: IChemicalCargoRepository = {
     const {
       cargo_code,
       chemical_id,
-      delivery_date,
+      entry_date,
       destination,
       measure_unity_id,
       origin,
@@ -66,7 +66,7 @@ const ChemicalCargoRepository: IChemicalCargoRepository = {
       data: {
         cargo_code,
         chemical_id,
-        delivery_date: delivery_date && new Date(delivery_date),
+        entry_date: entry_date && new Date(entry_date),
         destination,
         measure_unity_id,
         origin,
