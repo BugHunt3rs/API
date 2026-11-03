@@ -40,7 +40,7 @@ model chemical_cargo {
   required_documentation_id  Int
   delivered_documentation_id Int?
   status_id                  Int
-  delivery_date              DateTime                @db.Date
+  entry_date              DateTime                @db.Date
   create_date                DateTime                @default(now()) @db.Timestamptz(6)
   update_date                DateTime                @default(now()) @db.Timestamptz(6)
   chemical                   chemical                @relation(fields: [chemical_id], references: [id], onDelete: NoAction, onUpdate: NoAction)

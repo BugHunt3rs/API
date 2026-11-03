@@ -23,7 +23,7 @@ const validCargo = {
   technical_manager_id: 1,
   required_documentation_id: 1,
   status_id: 1,
-  delivery_date: "2026-10-20",
+  entry_date: "2026-10-20",
 };
 
 const activeChemical = { id: 1, status: true };

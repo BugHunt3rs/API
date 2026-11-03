@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS "chemical_cargo" (
 	"required_documentation_id" INTEGER NOT NULL,
 	"delivered_documentation_id" INTEGER,
 	"status_id" INTEGER NOT NULL,
-	"delivery_date" DATE NOT NULL,
+	"entry_date" DATE NOT NULL,
 	"create_date" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	"update_date" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY("id")

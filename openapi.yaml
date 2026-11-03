@@ -471,7 +471,7 @@ components:
         - technical_manager_id
         - required_documentation_id
         - status_id
-        - delivery_date
+        - entry_date
       properties:
         cargo_code: { type: string, example: CARGO-001 }
         chemical_id: { type: integer, example: 1 }
@@ -491,7 +491,7 @@ components:
           type: integer
           description: Status inicial (1 = Registered)
           example: 1
-        delivery_date: { type: string, format: date-time, example: "2026-12-01T10:00:00Z" }
+        entry_date: { type: string, format: date-time, example: "2026-12-01T10:00:00Z" }
     ChemicalCargo:
       allOf:
         - $ref: "#/components/schemas/NewChemicalCargo"

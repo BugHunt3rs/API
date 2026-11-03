@@ -260,7 +260,7 @@ curl -X POST http://localhost:3000/v1/chemical -H "Content-Type: application/jso
 
 # 2. Register a cargo of that product (status_id 1 = Registered)
 curl -X POST http://localhost:3000/v1/chemicalCargo -H "Content-Type: application/json" \
-  -d '{"cargo_code":"CARGO-100","chemical_id":1,"quantity":300,"measure_unity_id":2,"origin":"Santos","destination":"Cubatao","technical_manager_id":1,"required_documentation_id":1,"status_id":1,"delivery_date":"2026-12-10"}'
+  -d '{"cargo_code":"CARGO-100","chemical_id":1,"quantity":300,"measure_unity_id":2,"origin":"Santos","destination":"Cubatao","technical_manager_id":1,"required_documentation_id":1,"status_id":1,"entry_date":"2026-12-10"}'
 
 # 3. Send it to analysis (status_id 2 = Under Analyses)
 curl -X PATCH http://localhost:3000/v1/chemicalCargo/1 -H "Content-Type: application/json" -d '{"status_id":2}'
@@ -391,7 +391,7 @@ erDiagram
         int required_documentation_id FK
         int delivered_documentation_id FK "null until delivered"
         int status_id FK
-        date delivery_date
+        date entry_date
         timestamptz create_date
         timestamptz update_date
     }
