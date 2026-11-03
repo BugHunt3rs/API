@@ -32,7 +32,7 @@ model chemical_cargo {
   id                         Int                     @id @default(autoincrement())
   cargo_code                 String                  @db.VarChar(255)
   chemical_id                Int
-  quantity                   BigInt
+  quantity                   Int
   measure_unity_id           Int
   origin                     String                  @db.VarChar(255)
   destination                String                  @db.VarChar(255)
