@@ -4,7 +4,7 @@ export type ChemicalCargo = {
   id: number;
   cargo_code: string;
   chemical_id: number;
-  quantity: bigint;
+  quantity: number;
   measure_unity_id: number;
   origin: string;
   destination: string;
